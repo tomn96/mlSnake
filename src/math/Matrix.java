@@ -57,34 +57,6 @@ public class Matrix {
         }
     }
 
-    public Matrix dot(Matrix other) throws MatrixException {
-        if (cols == other.rows) {
-            Matrix result = new Matrix(rows, other.cols);
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < other.cols; j++) {
-                    float sum = 0;
-                    for (int k = 0; k < cols; k++) {
-                        sum += m[i][k] * other.m[k][j];
-                    }
-                    result.m[i][j] = sum;
-                }
-            }
-            return result;
-        } else {
-            throw new MatrixException("Can't dot these Matrices because of dimension reasons: this.cols does not equal other.rows");
-
-//            System.err.println("Can't dot these Matrices because of dimension reasons: this.cols does not equal other.rows");
-//
-//            System.err.println("this:");
-//            System.err.println(this.toString());
-//            System.err.println("other:");
-//            System.err.println(other.toString());
-//
-//            System.exit(1);
-//            return null;
-        }
-    }
-
     public float[] toArray() {
         float[] result = new float[rows * cols];
         for (int i = 0; i < rows; i++) {
@@ -120,6 +92,34 @@ public class Matrix {
             Matrix matrix = new Matrix(1, array.length);
             System.arraycopy(array, 0, matrix.m[0], 0, array.length);
             return matrix;
+        }
+
+        public Matrix dot(Matrix left, Matrix right) throws MatrixException {
+            if (left.cols == right.rows) {
+                Matrix result = new Matrix(left.rows, right.cols);
+                for (int i = 0; i < left.rows; i++) {
+                    for (int j = 0; j < right.cols; j++) {
+                        float sum = 0;
+                        for (int k = 0; k < left.cols; k++) {
+                            sum += left.m[i][k] * right.m[k][j];
+                        }
+                        result.m[i][j] = sum;
+                    }
+                }
+                return result;
+            } else {
+                throw new MatrixException("Can't dot these Matrices because of dimension reasons: left.cols does not equal right.rows");
+
+//            System.err.println("Can't dot these Matrices because of dimension reasons: left.cols does not equal right.rows");
+//
+//            System.err.println("left:");
+//            System.err.println(left.toString());
+//            System.err.println("right:");
+//            System.err.println(right.toString());
+//
+//            System.exit(1);
+//            return null;
+            }
         }
 
         public static Matrix addBiasToVector(Matrix vector) throws MatrixException {
