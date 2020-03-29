@@ -80,6 +80,16 @@ public class Matrix {
 
     public static class Utils {
 
+        public static Matrix transpose(Matrix matrix) {
+            Matrix result = new Matrix(matrix.cols, matrix.rows);
+            for (int i = 0; i < matrix.rows; i++) {
+                for (int j = 0; j < matrix.cols; j++) {
+                    result.m[j][i] = matrix.m[i][j];
+                }
+            }
+            return result;
+        }
+
         public static Matrix arrayToColMatrix(float[] array) {
             Matrix matrix = new Matrix(array.length, 1);
             for (int i = 0; i < array.length; i++) {
@@ -94,7 +104,7 @@ public class Matrix {
             return matrix;
         }
 
-        public Matrix dot(Matrix left, Matrix right) throws MatrixException {
+        public static Matrix dot(Matrix left, Matrix right) throws MatrixException {
             if (left.cols == right.rows) {
                 Matrix result = new Matrix(left.rows, right.cols);
                 for (int i = 0; i < left.rows; i++) {
@@ -134,7 +144,7 @@ public class Matrix {
             return new_vector;
         }
 
-        public Matrix transformEachElement(Matrix matrix, Function<Float, Float> function) {
+        public static Matrix transformEachElement(Matrix matrix, Function<Float, Float> function) {
             Matrix result = new Matrix(matrix.rows, matrix.cols);
             for (int i = 0; i < matrix.rows; i++) {
                 for (int j = 0; j < matrix.cols; j++) {
