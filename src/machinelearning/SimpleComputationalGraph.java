@@ -3,11 +3,11 @@ package machinelearning;
 import math.Matrix;
 import math.RandomUniformBetweenMinusOneToOne;
 
-public class ComputationalGraph {
+public class SimpleComputationalGraph {
     protected int iNodes, hNodes, oNodes, hLayers;
     protected Matrix[] weights;
 
-    public ComputationalGraph(int input, int hidden, int output, int hiddenLayers) {
+    public SimpleComputationalGraph(int input, int hidden, int output, int hiddenLayers) {
         iNodes = input;
         hNodes = hidden;
         oNodes = output;
