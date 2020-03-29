@@ -4,8 +4,8 @@ import java.util.concurrent.Callable;
 import java.util.function.Function;
 
 public class Matrix {
-    private int rows, cols;
-    private float[][] m;
+    protected int rows, cols;
+    protected float[][] m;
 
     public Matrix(int rows, int cols) {
         this.rows = rows;
