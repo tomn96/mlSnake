@@ -1,31 +1,51 @@
 package evolution;
 
 import machinelearning.SimpleComputationalGraph;
+import math.Matrix;
 import math.RandomUniformBetweenMinusOneToOne;
 
-public class Brain extends SimpleComputationalGraph {
-    public Brain(int input, int hidden, int output, int hiddenLayers) {
+public class Brain extends SimpleComputationalGraph implements Mutable, Combinable<Brain> {
+
+    public Brain(int input, int hidden, int output, int hiddenLayers, boolean initial_weights) {
         iNodes = input;
         hNodes = hidden;
         oNodes = output;
         hLayers = hiddenLayers;
 
         weights = new DNA[hLayers + 1];
-        weights[0] = new DNA(hNodes, iNodes + 1, new RandomUniformBetweenMinusOneToOne());
-        for (int i = 1; i < hLayers; i++) {
-            weights[i] = new DNA(hNodes, hNodes + 1, new RandomUniformBetweenMinusOneToOne());
+        if (initial_weights) {
+            weights[0] = new DNA(hNodes, iNodes + 1, new RandomUniformBetweenMinusOneToOne());
+            for (int i = 1; i < hLayers; i++) {
+                weights[i] = new DNA(hNodes, hNodes + 1, new RandomUniformBetweenMinusOneToOne());
+            }
+            weights[hLayers] = new DNA(oNodes, hNodes + 1, new RandomUniformBetweenMinusOneToOne());
         }
-        weights[hLayers] = new DNA(oNodes, hNodes + 1, new RandomUniformBetweenMinusOneToOne());
+    }
+
+    public Brain(int input, int hidden, int output, int hiddenLayers) {
+        this(input, hidden, output, hiddenLayers, true);
     }
 
     public Brain(Brain b) {
-        iNodes = b.iNodes;
-        hNodes = b.hNodes;
-        oNodes = b.oNodes;
-        hLayers = b.hLayers;
-        weights = new DNA[b.weights.length];
+        this(b.iNodes, b.hNodes, b.oNodes, b.hLayers, false);
         for (int i = 0; i < b.weights.length; i++) {
             weights[i] = new DNA(b.weights[i]);
         }
+    }
+
+    @Override
+    public void mutate(float rate) {
+        for (Matrix weight : weights) {
+            ((DNA) weight).mutate(rate);
+        }
+    }
+
+    @Override
+    public Brain combine(Brain other) {
+        Brain result = new Brain(iNodes, hNodes, oNodes, hLayers, false);
+        for (int i = 0; i < weights.length; i++) {
+            result.weights[i] = ((DNA) this.weights[i]).combine(((DNA) other.weights[i]));
+        }
+        return result;
     }
 }
