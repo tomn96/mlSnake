@@ -93,20 +93,6 @@ public class Matrix {
         }
     }
 
-    public static Matrix arrayToColMatrix(float[] array) {
-        Matrix matrix = new Matrix(array.length, 1);
-        for(int i = 0; i < array.length; i++) {
-            matrix.m[i][0] = array[i];
-        }
-        return matrix;
-    }
-
-    public static Matrix arrayToRowMatrix(float[] array) {
-        Matrix matrix = new Matrix(1, array.length);
-        System.arraycopy(array, 0, matrix.m[0], 0, array.length);
-        return matrix;
-    }
-
     public float[] toArray() {
         float[] result = new float[rows*cols];
         for(int i = 0; i < rows; i++) {
@@ -127,4 +113,34 @@ public class Matrix {
         }
         return result.toString();
     }
+
+    public static class Utils {
+
+        public static Matrix arrayToColMatrix(float[] array) {
+            Matrix matrix = new Matrix(array.length, 1);
+            for(int i = 0; i < array.length; i++) {
+                matrix.m[i][0] = array[i];
+            }
+            return matrix;
+        }
+
+        public static Matrix arrayToRowMatrix(float[] array) {
+            Matrix matrix = new Matrix(1, array.length);
+            System.arraycopy(array, 0, matrix.m[0], 0, array.length);
+            return matrix;
+        }
+
+        public static Matrix addBiasToVector(Matrix vector) throws MatrixException {
+            if (vector.cols != 1) {
+                throw new MatrixException("Not a Col Vector");
+            }
+            Matrix new_vector = new Matrix(vector.rows + 1, 1);
+            for(int i = 0; i < vector.rows; i++) {
+                new_vector.m[i][0] = vector.m[i][0];
+            }
+            new_vector.m[vector.rows][0] = 1;
+            return new_vector;
+        }
+    }
+
 }
