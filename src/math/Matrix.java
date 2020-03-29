@@ -1,6 +1,7 @@
 package math;
 
 import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 public class Matrix {
     private int rows, cols;
@@ -140,6 +141,16 @@ public class Matrix {
             }
             new_vector.m[vector.rows][0] = 1;
             return new_vector;
+        }
+
+        public Matrix transformEachElement(Matrix matrix, Function<Float, Float> function) {
+            Matrix result = new Matrix(matrix.rows, matrix.cols);
+            for(int i = 0; i < matrix.rows; i++) {
+                for(int j = 0; j < matrix.cols; j++) {
+                    result.m[i][j] = function.apply(matrix.m[i][j]);
+                }
+            }
+            return result;
         }
     }
 
