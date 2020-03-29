@@ -41,6 +41,15 @@ public class Matrix {
         }
     }
 
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
+    }
+
+
     public float get(int row, int col) throws MatrixException {
         if (0 <= row && row < rows && 0 <= col && col < cols) {
             return m[row][col];
@@ -71,7 +80,39 @@ public class Matrix {
             return result;
         } else {
             throw new MatrixException("Can't dot these Matrices because of dimension reasons: this.cols does not equal other.rows");
+
+//            System.err.println("Can't dot these Matrices because of dimension reasons: this.cols does not equal other.rows");
+//
+//            System.err.println("this:");
+//            System.err.println(this.toString());
+//            System.err.println("other:");
+//            System.err.println(other.toString());
+//
+//            System.exit(1);
+//            return null;
         }
+    }
+
+    public static Matrix arrayToColMatrix(float[] array) {
+        Matrix matrix = new Matrix(array.length, 1);
+        for(int i = 0; i < array.length; i++) {
+            matrix.m[i][0] = array[i];
+        }
+        return matrix;
+    }
+
+    public static Matrix arrayToRowMatrix(float[] array) {
+        Matrix matrix = new Matrix(1, array.length);
+        System.arraycopy(array, 0, matrix.m[0], 0, array.length);
+        return matrix;
+    }
+
+    public float[] toArray() {
+        float[] result = new float[rows*cols];
+        for(int i = 0; i < rows; i++) {
+            System.arraycopy(m[i], 0, result, i * cols, cols);
+        }
+        return result;
     }
 
     @Override
