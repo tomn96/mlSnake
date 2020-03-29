@@ -15,14 +15,14 @@ public class Matrix {
 
     public Matrix(Matrix matrix) {
         this(matrix.rows, matrix.cols);
-        for(int i = 0; i < matrix.rows; i++) {
+        for (int i = 0; i < matrix.rows; i++) {
             System.arraycopy(matrix.m[i], 0, this.m[i], 0, matrix.cols);
         }
     }
 
     public Matrix(float[][] raw_matrix) {
         this(raw_matrix.length, raw_matrix[0].length);
-        for(int i = 0; i < raw_matrix.length; i++) {
+        for (int i = 0; i < raw_matrix.length; i++) {
             System.arraycopy(raw_matrix[i], 0, this.m[i], 0, raw_matrix[i].length);
         }
     }
@@ -42,15 +42,6 @@ public class Matrix {
         }
     }
 
-    public int getRows() {
-        return rows;
-    }
-
-    public int getCols() {
-        return cols;
-    }
-
-
     public float get(int row, int col) throws MatrixException {
         if (0 <= row && row < rows && 0 <= col && col < cols) {
             return m[row][col];
@@ -67,7 +58,7 @@ public class Matrix {
     }
 
     public Matrix dot(Matrix other) throws MatrixException {
-        if(cols == other.rows) {
+        if (cols == other.rows) {
             Matrix result = new Matrix(rows, other.cols);
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < other.cols; j++) {
@@ -95,8 +86,8 @@ public class Matrix {
     }
 
     public float[] toArray() {
-        float[] result = new float[rows*cols];
-        for(int i = 0; i < rows; i++) {
+        float[] result = new float[rows * cols];
+        for (int i = 0; i < rows; i++) {
             System.arraycopy(m[i], 0, result, i * cols, cols);
         }
         return result;
@@ -105,8 +96,8 @@ public class Matrix {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < cols; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 result.append(String.valueOf(m[i][j]));
                 result.append(" ");
             }
@@ -119,7 +110,7 @@ public class Matrix {
 
         public static Matrix arrayToColMatrix(float[] array) {
             Matrix matrix = new Matrix(array.length, 1);
-            for(int i = 0; i < array.length; i++) {
+            for (int i = 0; i < array.length; i++) {
                 matrix.m[i][0] = array[i];
             }
             return matrix;
@@ -136,7 +127,7 @@ public class Matrix {
                 throw new MatrixException("Not a Col Vector");
             }
             Matrix new_vector = new Matrix(vector.rows + 1, 1);
-            for(int i = 0; i < vector.rows; i++) {
+            for (int i = 0; i < vector.rows; i++) {
                 new_vector.m[i][0] = vector.m[i][0];
             }
             new_vector.m[vector.rows][0] = 1;
@@ -145,8 +136,8 @@ public class Matrix {
 
         public Matrix transformEachElement(Matrix matrix, Function<Float, Float> function) {
             Matrix result = new Matrix(matrix.rows, matrix.cols);
-            for(int i = 0; i < matrix.rows; i++) {
-                for(int j = 0; j < matrix.cols; j++) {
+            for (int i = 0; i < matrix.rows; i++) {
+                for (int j = 0; j < matrix.cols; j++) {
                     result.m[i][j] = function.apply(matrix.m[i][j]);
                 }
             }
