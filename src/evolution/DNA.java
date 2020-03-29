@@ -25,10 +25,10 @@ public class DNA extends Matrix implements Mutable, Combinable<DNA> {
     @Override
     public void mutate(float rate) {
         Random rand = new Random();
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < cols; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 float res = rand.nextFloat();
-                if(res < rate) {
+                if (res < rate) {
                     m[i][j] += rand.nextGaussian() / 5;
                     m[i][j] = Math.min(m[i][j], 1);
                     m[i][j] = Math.max(m[i][j], -1);
@@ -45,9 +45,9 @@ public class DNA extends Matrix implements Mutable, Combinable<DNA> {
         int randR = rand.nextInt(rows);
         int randC = rand.nextInt(cols);
 
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0;  j < cols; j++) {
-                if((i  < randR) || (i == randR && j <= randC)) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if ((i < randR) || (i == randR && j <= randC)) {
                     combined.m[i][j] = m[i][j];
                 } else {
                     combined.m[i][j] = other.m[i][j];
