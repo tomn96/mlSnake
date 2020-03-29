@@ -1,4 +1,4 @@
-package ml;
+package machinelearning;
 
 import java.util.function.Function;
 
