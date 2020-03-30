@@ -21,9 +21,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
 
     private float[] vision = new float[24];
     private float[] decision = new float[4];
-
-    private int xVelocity = 0;
-    private int yVelocity = 0;
+    private BoardCoordinate velocity = new BoardCoordinate(0, 0);
 
     private BoardCoordinate head = new BoardCoordinate(0, 0); // TODO - random?
     private List<BoardCoordinate> body = new ArrayList<>();
@@ -68,13 +66,17 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         foodItterate++;
     }
 
-    private boolean bodyCollision() {  // check if snake collides with itself
+    private boolean bodyCollision(BoardCoordinate other) {  // check if snake collides with itself
         for (BoardCoordinate bc : body) {
-            if (head.equals(bc)) {
+            if (other.equals(bc)) {
                 return true;
             }
         }
         return false;
+    }
+
+    private boolean bodyCollision() {  // check if snake collides with itself
+        return bodyCollision(head);
     }
 
     private boolean foundFood() {  // check if a snake found food
@@ -127,8 +129,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
 
     private void shiftBody() {  // shift the body to follow the head
         BoardCoordinate temp1 = new BoardCoordinate(head);
-        head.x += xVelocity;
-        head.y += yVelocity;
+        head.add(velocity);
 
         BoardCoordinate temp2;
         for (int i = 0; i < body.size(); i++) {
@@ -154,5 +155,49 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         int a = Math.min(10, score);
         int b = Math.max(1, score - 9);
         return (float) (Math.floor(lifetime * lifetime) * Math.pow(2, a) * b);
+    }
+
+    private float[] look() {  // look in all 8 directions and check for food, body and wall
+        vision = new float[24];
+
+        int k = 0;
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0) {
+                    continue;
+                }
+                float[] temp = lookInDirection(new BoardCoordinate(i, j));
+                System.arraycopy(temp, 0, vision, k, 3);
+                k += 3;
+            }
+        }
+
+        return vision;
+    }
+
+    private float[] lookInDirection(BoardCoordinate direction) {  // look in a direction and check for food, body and wall
+        float[] result = new float[3]; // [food, body, wall]
+
+        BoardCoordinate pos = new BoardCoordinate(head);
+        pos.add(direction);
+        float distance = 1;
+
+        boolean foodFound = false;
+        boolean bodyFound = false;
+
+        while (!Board.wallCollision(pos)) {
+            if (!foodFound && pos.equals(food)) {
+                foodFound = true;
+                result[0] = 1;
+            }
+            if (!bodyFound && bodyCollision(pos)) {
+                bodyFound = true;
+                result[1] = 1;
+            }
+            pos.add(direction);
+            distance += 1;
+        }
+        result[2] = 1 / distance;
+        return result;
     }
 }
