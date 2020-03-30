@@ -15,7 +15,6 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
     Random random = new Random();
 
     private int score = 3;
-    private float fitness = 0;
     private boolean dead = false;
     private int lifeLeft = 200;  // amount of moves the snake can make before it dies
     private int lifetime = 0;  // amount of time the snake has been alive
@@ -69,7 +68,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         foodItterate++;
     }
 
-    boolean bodyCollision() {  // check if snake collides with itself
+    private boolean bodyCollision() {  // check if snake collides with itself
         for (BoardCoordinate bc : body) {
             if (head.equals(bc)) {
                 return true;
@@ -78,15 +77,15 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         return false;
     }
 
-    boolean foundFood() {  // check if a snake found food
+    private boolean foundFood() {  // check if a snake found food
         return head.equals(food);
     }
 
-    boolean wallCollision() {
+    private boolean wallCollision() {
         return Board.wallCollision(head);
     }
 
-    void move() {
+    private void move() {
         if (!dead) {
             lifetime++;
             lifeLeft--;
@@ -132,7 +131,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         head.y += yVelocity;
 
         BoardCoordinate temp2;
-        for(int i = 0; i < body.size(); i++) {
+        for (int i = 0; i < body.size(); i++) {
             temp2 = new BoardCoordinate(body.get(i));
             body.set(i, temp1);
             temp1 = new BoardCoordinate(temp2);
@@ -149,5 +148,11 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
     @Override
     public void mutate(float rate) {
         brain.mutate(rate);
+    }
+
+    private float fitness() {
+        int a = Math.min(10, score);
+        int b = Math.max(1, score - 9);
+        return (float) (Math.floor(lifetime * lifetime) * Math.pow(2, a) * b);
     }
 }
