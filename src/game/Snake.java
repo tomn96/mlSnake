@@ -4,6 +4,7 @@ import evolution.Brain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Snake extends GameObject {
     private static final int HIDDEN_NODES = 16;
@@ -16,25 +17,25 @@ public class Snake extends GameObject {
     private float fitness = 0;
     private boolean dead = false;
 
-    private float[] vision = new float[24];  // snake's vision
-    private float[] decision = new float[4];  // snake's decision
+    private float[] vision = new float[24];
+    private float[] decision = new float[4];
 
     private BoardCoordinate head;
-    private List<BoardCoordinate> body = new ArrayList<>(1);  // snake's body
+    private List<BoardCoordinate> body = new ArrayList<>();
     private Brain brain;
 
 
-    // not sure yet:
+    Random random = new Random();
 
+    // TODO - move these out of this class (all food in general):
     private BoardCoordinate food;
 
+    private List<BoardCoordinate> foodList = new ArrayList<>();  // list of food positions (used to replay the best snake)
     private boolean replay = false;  // if this snake is a replay of best snake
     private int foodItterate = 0;  // itterator to run through the foodlist (used for replay)
-    private List<BoardCoordinate> foodList = new ArrayList<>();  // list of food positions (used to replay the best snake)
 
     public Snake(int hidden_nodes, int hidden_layer) {
-        head = new BoardCoordinate(0, 0);
-        body.add(head);
+        head = new BoardCoordinate(0, 0); // TODO - random?
         brain = new Brain(24, hidden_nodes, 4, hidden_layer);
 
         food = new BoardCoordinate(1, 1);
@@ -60,11 +61,8 @@ public class Snake extends GameObject {
     }
 
     boolean bodyCollision() {  // check if snake collides with itself
-        for (int i = 1; i < body.size(); i++) {
-            if (head == body.get(i)) { // addresses are equal
-                System.err.println("Something has gone wrong. The snake's head is not the first Object in the body list.");
-                return true;
-            } else if (head.equals(body.get(i))) {
+        for (BoardCoordinate bc : body) {
+            if (head.equals(bc)) {
                 return true;
             }
         }
@@ -97,10 +95,28 @@ public class Snake extends GameObject {
         }
     }
 
+    private void eat() {
+        score++;
+        lifeLeft = Math.min(lifeLeft + 100, 500);
+
+        if (body.size() >= 1) {
+            body.add(new BoardCoordinate(body.get(body.size() - 1)));
+        } else {
+            body.add(new BoardCoordinate(head));
+        }
+
+        if (!replay) { // TODO: remove replay from here - all the generation of food in general
+            food = new BoardCoordinate(random.nextInt(Board.WIDTH), random.nextInt(Board.HEIGHT));
+            while (foundFood()) {
+                food = new BoardCoordinate(random.nextInt(Board.WIDTH), random.nextInt(Board.HEIGHT));
+            }
+            foodList.add(new BoardCoordinate(food));
+        } else {  //if the snake is a replay, then we dont want to create new random foods, we want to see the positions the best snake had to collect
+            food = new BoardCoordinate(foodList.get(foodItterate));
+            foodItterate++;
+        }
+    }
+
     private void shiftBody() {
     }
-
-    private void eat() {
-    }
-
 }
