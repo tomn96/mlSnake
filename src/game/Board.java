@@ -2,10 +2,13 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Board {
     public static final int WIDTH = 10;
     public static final int HEIGHT = 10;
+
+    private Random random = new Random();
 
     private int width;
     private int height;
@@ -22,7 +25,7 @@ public class Board {
         this.height = height;
         this.snake = snake;
         if (initiateFood) {
-            this.food = generateFood();
+            generateFood();
             this.foodList = new ArrayList<>();
             this.foodList.add(this.food);
         }
@@ -48,12 +51,20 @@ public class Board {
         foodIndex++;
     }
 
-    private BoardCoordinate generateFood() {  // TODO - change implementation
-        return new BoardCoordinate(1,1);
+    public void generateFood() {
+        food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
+        while (snakeFoundFood() || snake.bodyCollision(food)) {
+            food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
+        }
+        foodList.add(new BoardCoordinate(food));
+    }
+
+    public boolean foundFood(BoardCoordinate bc) {
+        return bc.equals(food);
     }
 
     public boolean snakeFoundFood() {  // check if a snake found food
-        return snake.getHead().equals(food);
+        return foundFood(snake.getHead());
     }
 
     static boolean wallCollision(BoardCoordinate boardCoordinate) {

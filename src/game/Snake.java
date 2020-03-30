@@ -25,21 +25,9 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
     private Brain brain;
     private Board board;
 
-    // TODO - move these out of this class (all food in general):
-    private BoardCoordinate food;
-    private List<BoardCoordinate> foodList = new ArrayList<>();  // list of food positions (used to replay the best snake)
-    private int foodItterate = 0;  // itterator to run through the foodlist (used for replay)
-
-    private boolean replay = false;  // if this snake is a replay of best snake
-
-
     public Snake(Brain brain) {
         this.board = new Board(this);
         this.brain = new Brain(brain);
-
-        // TODO - move this out of here:
-        food = new BoardCoordinate(1, 1);
-        foodList.add(new BoardCoordinate(food));
     }
 
     public Snake(int hidden_nodes, int hidden_layer) {
@@ -54,7 +42,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         return head;
     }
 
-    private boolean bodyCollision(BoardCoordinate other) {  // check if snake collides with itself
+    public boolean bodyCollision(BoardCoordinate other) {  // check if snake collides with itself
         for (BoardCoordinate bc : body) {
             if (other.equals(bc)) {
                 return true;
@@ -101,16 +89,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
             body.add(new BoardCoordinate(head));
         }
 
-        if (!replay) { // TODO: remove replay from here - all the generation of food in general
-            food = new BoardCoordinate(random.nextInt(Board.WIDTH), random.nextInt(Board.HEIGHT));
-            while (board.snakeFoundFood()) {
-                food = new BoardCoordinate(random.nextInt(Board.WIDTH), random.nextInt(Board.HEIGHT));
-            }
-            foodList.add(new BoardCoordinate(food));
-        } else {  //if the snake is a replay, then we dont want to create new random foods, we want to see the positions the best snake had to collect
-            food = new BoardCoordinate(foodList.get(foodItterate));
-            foodItterate++;
-        }
+        board.generateFood(); // TODO - maybe after shift body?
     }
 
     private void shiftBody(BoardCoordinate velocity) {  // shift the body to follow the head
@@ -172,7 +151,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         boolean bodyFound = false;
 
         while (!Board.wallCollision(pos)) {
-            if (!foodFound && pos.equals(food)) {
+            if (!foodFound && board.foundFood(pos)) {
                 foodFound = true;
                 result[0] = 1;
             }
