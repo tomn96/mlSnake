@@ -42,6 +42,13 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         return head;
     }
 
+    public List<BoardCoordinate> getCoordinates() {
+        List<BoardCoordinate> result = new ArrayList<>(1 + body.size());
+        result.add(head);
+        result.addAll(body);
+        return result;
+    }
+
     public boolean bodyCollision(BoardCoordinate other) {  // check if snake collides with itself
         for (BoardCoordinate bc : body) {
             if (other.equals(bc)) {
@@ -169,7 +176,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
     private BoardCoordinate think(float[] vision) {  // think about what direction to move
         int decision = brain.output(vision);
 
-        switch(decision) {
+        switch (decision) {
             case 0:
                 return new BoardCoordinate(-1, 0);
             case 1:

@@ -25,7 +25,7 @@ public class Board {
         this.height = height;
         this.snake = snake;
         if (initiateFood) {
-            generateFood();
+            food = new BoardCoordinate(random.nextInt(this.width), random.nextInt(this.height));
             this.foodList = new ArrayList<>();
             this.foodList.add(this.food);
         }
@@ -69,5 +69,33 @@ public class Board {
 
     static boolean wallCollision(BoardCoordinate boardCoordinate) {
         return boardCoordinate.x < 0 || boardCoordinate.x >= Board.WIDTH || boardCoordinate.y < 0 || boardCoordinate.y >= Board.HEIGHT;
+    }
+
+    public void renderCoordinate(StringBuilder graphic, BoardCoordinate coordinate, char sign) {
+        int location = (int) ((coordinate.y * width) + coordinate.x);
+        graphic.replace(location, location + 1, String.valueOf(sign));
+    }
+
+    private void renderFood(StringBuilder graphic) {
+        renderCoordinate(graphic, food, '0');
+    }
+
+    private void renderSnake(StringBuilder graphic) {
+        for (BoardCoordinate coordinate : snake.getCoordinates()) {
+            renderCoordinate(graphic, coordinate, 'x');
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("-".repeat(width * height));
+        renderFood(result);
+        renderSnake(result);
+
+        for (int i = 1; i < height; i++) {
+            result.insert((i * width) + i - 1, "\n");
+        }
+        return result.toString();
     }
 }
