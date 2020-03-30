@@ -7,6 +7,7 @@ import java.util.Random;
 public class Board {
     public static final int WIDTH = 10;
     public static final int HEIGHT = 10;
+    private static final int MAX_TRIES_GENERATE_FOOD = 1000;
 
     private Random random = new Random();
 
@@ -51,10 +52,31 @@ public class Board {
         foodIndex++;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     public void generateFood() {
         food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
-        while (snakeFoundFood() || snake.bodyCollision(food)) {
+        int tries = 0;
+        while (tries < MAX_TRIES_GENERATE_FOOD && (snakeFoundFood() || snake.bodyCollision(food))) {
             food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
+            tries++;
+        }
+        if (tries >= MAX_TRIES_GENERATE_FOOD) {
+            food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
+            tries = 0;
+            while (tries < MAX_TRIES_GENERATE_FOOD && snakeFoundFood()) {
+                food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
+                tries++;
+            }
+            if (tries >= MAX_TRIES_GENERATE_FOOD) {
+                food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
+            }
         }
         foodList.add(new BoardCoordinate(food));
     }
@@ -67,11 +89,14 @@ public class Board {
         return foundFood(snake.getHead());
     }
 
-    static boolean wallCollision(BoardCoordinate boardCoordinate) {
-        return boardCoordinate.x < 0 || boardCoordinate.x >= Board.WIDTH || boardCoordinate.y < 0 || boardCoordinate.y >= Board.HEIGHT;
+    public boolean wallCollision(BoardCoordinate boardCoordinate) {
+        return boardCoordinate.x < 0 || boardCoordinate.x >= width || boardCoordinate.y < 0 || boardCoordinate.y >= height;
     }
 
     public void renderCoordinate(StringBuilder graphic, BoardCoordinate coordinate, char sign) {
+        if (wallCollision(coordinate)) {
+            return;
+        }
         int location = (int) ((coordinate.y * width) + coordinate.x);
         graphic.replace(location, location + 1, String.valueOf(sign));
     }

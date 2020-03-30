@@ -6,13 +6,10 @@ import evolution.Mutable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Snake extends GameObject implements Mutable, Combinable<Snake> {
     private static final int HIDDEN_NODES = 16;
     private static final int HIDDEN_LAYERS = 2;
-
-    private Random random = new Random();
 
     private int score = 3;
     private boolean dead = false;
@@ -26,20 +23,28 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
     private Board board;
 
     public Snake(Brain brain) {
-        this.board = new Board(this);
-        this.brain = new Brain(brain);
-    }
+        if (brain == null) {
+            this.brain = new Brain(24, Snake.HIDDEN_NODES, 4, Snake.HIDDEN_LAYERS);
+        } else {
+            this.brain = new Brain(brain);
+        }
+        board = new Board(this);
 
-    public Snake(int hidden_nodes, int hidden_layer) {
-        this(new Brain(24, hidden_nodes, 4, hidden_layer)); // TODO: can be faster - don't call this() constructor but build myself
+        int x = math.Utils.marginRandom(board.getWidth());
+        int y = math.Utils.marginRandom(board.getHeight());
+        this.head = new BoardCoordinate(x, y);
     }
 
     public Snake() {
-        this(Snake.HIDDEN_NODES, Snake.HIDDEN_LAYERS);
+        this(null);
     }
 
     public BoardCoordinate getHead() {
         return head;
+    }
+
+    public Board getBoard() {
+        return board;
     }
 
     public List<BoardCoordinate> getCoordinates() {
@@ -62,7 +67,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         return bodyCollision(head);
     }
 
-    private void move() {  // TODO - change to 'tick'
+    public void move() {  // TODO - change to 'tick'
         if (dead) {
             return;
         }
@@ -75,7 +80,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
 
         realMove();
 
-        if (Board.wallCollision(head) || bodyCollision() || lifeLeft <= 0) {
+        if (board.wallCollision(head) || bodyCollision() || lifeLeft <= 0) {
             dead = true;
         }
     }
@@ -157,7 +162,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         boolean foodFound = false;
         boolean bodyFound = false;
 
-        while (!Board.wallCollision(pos)) {
+        while (!board.wallCollision(pos)) {
             if (!foodFound && board.foundFood(pos)) {
                 foodFound = true;
                 result[0] = 1;
