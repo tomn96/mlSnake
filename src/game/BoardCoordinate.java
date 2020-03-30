@@ -11,6 +11,11 @@ public class BoardCoordinate {
         this.y = y;
     }
 
+    public BoardCoordinate(BoardCoordinate boardCoordinate) {
+        this.x = boardCoordinate.x;
+        this.y = boardCoordinate.y;
+    }
+
     @Override
     public String toString() {
         return "(" + x + ", " + y + ')';
