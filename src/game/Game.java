@@ -1,11 +1,8 @@
 package game;
 
-import javax.swing.*;
-import java.awt.*;
-
 public abstract class Game implements Runnable, Tickable, Renderable {
-    Thread thread;
-    boolean running = false;
+    private Thread thread;
+    private boolean running = false;
 
     @Override
     public void run() {

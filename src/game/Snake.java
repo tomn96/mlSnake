@@ -12,7 +12,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
     private static final int HIDDEN_NODES = 16;
     private static final int HIDDEN_LAYERS = 2;
 
-    Random random = new Random();
+    private Random random = new Random();
 
     private int score = 3;
     private boolean dead = false;

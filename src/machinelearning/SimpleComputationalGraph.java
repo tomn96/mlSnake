@@ -7,7 +7,7 @@ public abstract class SimpleComputationalGraph {
     protected int iNodes, hNodes, oNodes, hLayers;
     protected Matrix[] weights;
 
-    float[] compute(float[] inputArray) throws MatrixException {
+    private float[] compute(float[] inputArray) throws MatrixException {
         Matrix input = Matrix.Utils.arrayToColMatrix(inputArray);
         Matrix input_with_bias = Matrix.Utils.addBiasToVector(input);
 
@@ -23,7 +23,7 @@ public abstract class SimpleComputationalGraph {
         return output_activated.toArray();
     }
 
-    int output(float[] inputArray) {
+    public int output(float[] inputArray) {
         float[] computed = null;
         try {
             computed = compute(inputArray);
