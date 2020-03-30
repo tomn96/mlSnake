@@ -1,45 +1,54 @@
 package game;
 
 import evolution.Brain;
+import evolution.Combinable;
+import evolution.Mutable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Snake extends GameObject {
+public class Snake extends GameObject implements Mutable, Combinable<Snake> {
     private static final int HIDDEN_NODES = 16;
     private static final int HIDDEN_LAYERS = 2;
 
+    Random random = new Random();
+
     private int score = 3;
-    private int lifeLeft = 200;  // amount of moves the snake can make before it dies
-    private int lifetime = 0;  // amount of time the snake has been alive
-    private int xVelocity, yVelocity;
     private float fitness = 0;
     private boolean dead = false;
+    private int lifeLeft = 200;  // amount of moves the snake can make before it dies
+    private int lifetime = 0;  // amount of time the snake has been alive
 
     private float[] vision = new float[24];
     private float[] decision = new float[4];
 
-    private BoardCoordinate head;
+    private int xVelocity = 0;
+    private int yVelocity = 0;
+
+    private BoardCoordinate head = new BoardCoordinate(0, 0); // TODO - random?
     private List<BoardCoordinate> body = new ArrayList<>();
+
     private Brain brain;
-
-
-    Random random = new Random();
 
     // TODO - move these out of this class (all food in general):
     private BoardCoordinate food;
-
     private List<BoardCoordinate> foodList = new ArrayList<>();  // list of food positions (used to replay the best snake)
-    private boolean replay = false;  // if this snake is a replay of best snake
     private int foodItterate = 0;  // itterator to run through the foodlist (used for replay)
 
-    public Snake(int hidden_nodes, int hidden_layer) {
-        head = new BoardCoordinate(0, 0); // TODO - random?
-        brain = new Brain(24, hidden_nodes, 4, hidden_layer);
+    private boolean replay = false;  // if this snake is a replay of best snake
 
+
+    public Snake(Brain brain) {
+        brain = new Brain(brain);
+
+        // TODO - move this out of here:
         food = new BoardCoordinate(1, 1);
         foodList.add(new BoardCoordinate(food));
+    }
+
+    public Snake(int hidden_nodes, int hidden_layer) {
+        this(new Brain(24, hidden_nodes, 4, hidden_layer)); // TODO: can be faster - don't call this() constructor but build myself
     }
 
     public Snake() {
@@ -128,5 +137,15 @@ public class Snake extends GameObject {
             body.set(i, temp1);
             temp1 = new BoardCoordinate(temp2);
         }
+    }
+
+    @Override
+    public Snake combine(Snake other) {
+        return null;
+    }
+
+    @Override
+    public void mutate(float rate) {
+
     }
 }
