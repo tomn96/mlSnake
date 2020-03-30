@@ -148,6 +148,6 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
 
     @Override
     public void mutate(float rate) {
-
+        brain.mutate(rate);
     }
 }
