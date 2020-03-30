@@ -12,8 +12,7 @@ public class BoardCoordinate {
     }
 
     public BoardCoordinate(BoardCoordinate boardCoordinate) {
-        this.x = boardCoordinate.x;
-        this.y = boardCoordinate.y;
+        this(boardCoordinate.x, boardCoordinate.y);
     }
 
     @Override

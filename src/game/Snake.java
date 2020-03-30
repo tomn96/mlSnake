@@ -56,7 +56,7 @@ public class Snake extends GameObject {
             foodList.add(new BoardCoordinate(f));
         }
 
-        food = foodList.get(foodItterate);
+        food = new BoardCoordinate(foodList.get(foodItterate));
         foodItterate++;
     }
 
@@ -117,6 +117,16 @@ public class Snake extends GameObject {
         }
     }
 
-    private void shiftBody() {
+    private void shiftBody() {  // shift the body to follow the head
+        BoardCoordinate temp1 = new BoardCoordinate(head);
+        head.x += xVelocity;
+        head.y += yVelocity;
+
+        BoardCoordinate temp2;
+        for(int i = 0; i < body.size(); i++) {
+            temp2 = new BoardCoordinate(body.get(i));
+            body.set(i, temp1);
+            temp1 = new BoardCoordinate(temp2);
+        }
     }
 }
