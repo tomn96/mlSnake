@@ -45,4 +45,14 @@ public abstract class SimpleComputationalGraph {
         }
         return index;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("iNodes=").append(iNodes).append(", hNodes=").append(hNodes).append(", oNodes=").append(oNodes).append(", hLayers=").append(hLayers).append(", weights:\n");
+        for (int i = 0; i < weights.length; i++) {
+            result.append("weights[").append(i).append("]\n").append(weights[i]).append("\n\n");
+        }
+        return result.toString();
+    }
 }

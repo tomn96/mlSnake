@@ -141,7 +141,9 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
 
     @Override
     public Snake combine(Snake other) {
-        return null;
+        Snake combined = new Snake();
+        combined.brain = this.brain.combine(other.brain);
+        return combined;
     }
 
     @Override

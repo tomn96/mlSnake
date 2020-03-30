@@ -42,10 +42,13 @@ public class Brain extends SimpleComputationalGraph implements Mutable, Combinab
 
     @Override
     public Brain combine(Brain other) {
-        Brain result = new Brain(iNodes, hNodes, oNodes, hLayers, false);
-        for (int i = 0; i < weights.length; i++) {
-            result.weights[i] = ((DNA) this.weights[i]).combine(((DNA) other.weights[i]));
+        if (iNodes != other.iNodes || hNodes != other.hNodes || oNodes != other.oNodes || hLayers != other.hLayers) {
+            System.err.println("Something went wrong. Trying to combine two Brains with different size.\nthis: " + this + "\nother: " + other);
         }
-        return result;
+        Brain combined = new Brain(iNodes, hNodes, oNodes, hLayers, false);
+        for (int i = 0; i < weights.length; i++) {
+            combined.weights[i] = ((DNA) this.weights[i]).combine(((DNA) other.weights[i]));
+        }
+        return combined;
     }
 }

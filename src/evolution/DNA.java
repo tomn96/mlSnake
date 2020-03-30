@@ -39,6 +39,10 @@ public class DNA extends Matrix implements Mutable, Combinable<DNA> {
 
     @Override
     public DNA combine(DNA other) {
+        if (rows != other.rows || cols != other.cols) {
+            System.err.println("Something went wrong. Trying to combine two DNA with different size.\nthis:\n" + this + "\nother:\n" + other);
+        }
+
         DNA combined = new DNA(rows, cols);
 
         Random rand = new Random();
