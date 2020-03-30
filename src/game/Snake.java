@@ -20,8 +20,8 @@ public class Snake extends GameObject {
     private float[] vision = new float[24];  // snake's vision
     private float[] decision = new float[4];  // snake's decision
 
-    private Vector<Float> head = new Vector<>(2);
-    private List<Vector<Float>> body = new ArrayList<>(1);  // snake's body
+    private BoardCoordinate head;
+    private List<BoardCoordinate> body = new ArrayList<>(1);  // snake's body
     private Brain brain;
 
 
@@ -34,6 +34,7 @@ public class Snake extends GameObject {
     private List<Food> foodList = new ArrayList<>();  // list of food positions (used to replay the best snake)
 
     public Snake(int hidden_nodes, int hidden_layer) {
+        head = new BoardCoordinate(0, 0);
         body.add(head);
         brain = new Brain(24, hidden_nodes,4, hidden_layer);
 
@@ -50,7 +51,7 @@ public class Snake extends GameObject {
         replay = true;
 
         foodList = new ArrayList<>(foods.size());
-        for(Food f: foods) {  // clone all the food positions in the foodlist
+        for(Food f: foods) {
             foodList.add(new Food(f));
         }
 
