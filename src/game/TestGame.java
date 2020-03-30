@@ -6,10 +6,10 @@ public class TestGame implements Runnable, Tickable, Renderable {
     private Thread thread;
     private boolean running = false;
 
-    Snake snake;
+    SmartSnake snake;
 
     public TestGame() {
-        snake = new Snake();
+        snake = new SmartSnake();
     }
 
     @Override

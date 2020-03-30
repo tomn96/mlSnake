@@ -4,7 +4,7 @@ import evolution.Brain;
 import evolution.Combinable;
 import evolution.Mutable;
 
-public class Snake extends BaseSnake implements Mutable, Combinable<Snake> {
+public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSnake> {
     private static final int HIDDEN_NODES = 16;
     private static final int HIDDEN_LAYERS = 2;
 
@@ -14,15 +14,15 @@ public class Snake extends BaseSnake implements Mutable, Combinable<Snake> {
 
     private Brain brain;
 
-    public Snake(Brain brain) {
+    public SmartSnake(Brain brain) {
         if (brain == null) {
-            this.brain = new Brain(24, Snake.HIDDEN_NODES, 4, Snake.HIDDEN_LAYERS);
+            this.brain = new Brain(24, SmartSnake.HIDDEN_NODES, 4, SmartSnake.HIDDEN_LAYERS);
         } else {
             this.brain = new Brain(brain);
         }
     }
 
-    public Snake() {
+    public SmartSnake() {
         this(null);
     }
 
@@ -119,8 +119,8 @@ public class Snake extends BaseSnake implements Mutable, Combinable<Snake> {
     }
 
     @Override
-    public Snake combine(Snake other) {
-        Snake combined = new Snake();
+    public SmartSnake combine(SmartSnake other) {
+        SmartSnake combined = new SmartSnake();
         combined.brain = this.brain.combine(other.brain);
         return combined;
     }
