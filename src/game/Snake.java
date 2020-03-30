@@ -23,6 +23,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
     private List<BoardCoordinate> body = new ArrayList<>();
 
     private Brain brain;
+    private Board board;
 
     // TODO - move these out of this class (all food in general):
     private BoardCoordinate food;
@@ -33,7 +34,8 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
 
 
     public Snake(Brain brain) {
-        brain = new Brain(brain);
+        this.board = new Board(this);
+        this.brain = new Brain(brain);
 
         // TODO - move this out of here:
         food = new BoardCoordinate(1, 1);
@@ -48,18 +50,8 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         this(Snake.HIDDEN_NODES, Snake.HIDDEN_LAYERS);
     }
 
-    public Snake(List<BoardCoordinate> foods) {  // this constructor passes in a list of food positions so that a replay can replay the best snake
-        this();
-
-        replay = true;
-
-        foodList = new ArrayList<>(foods.size());
-        for (BoardCoordinate f : foods) {
-            foodList.add(new BoardCoordinate(f));
-        }
-
-        food = new BoardCoordinate(foodList.get(foodItterate));
-        foodItterate++;
+    public BoardCoordinate getHead() {
+        return head;
     }
 
     private boolean bodyCollision(BoardCoordinate other) {  // check if snake collides with itself
@@ -75,14 +67,6 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         return bodyCollision(head);
     }
 
-    private boolean foundFood() {  // check if a snake found food
-        return head.equals(food);
-    }
-
-    private boolean wallCollision() {
-        return Board.wallCollision(head);
-    }
-
     private void move() {  // TODO - change to 'tick'
         if (dead) {
             return;
@@ -90,13 +74,13 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
 
         lifetime++;
         lifeLeft--;
-        if (foundFood()) {
+        if (board.snakeFoundFood()) {
             eat();
         }
 
         realMove();
 
-        if (wallCollision() || bodyCollision() || lifeLeft <= 0) {
+        if (Board.wallCollision(head) || bodyCollision() || lifeLeft <= 0) {
             dead = true;
         }
     }
@@ -119,7 +103,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
 
         if (!replay) { // TODO: remove replay from here - all the generation of food in general
             food = new BoardCoordinate(random.nextInt(Board.WIDTH), random.nextInt(Board.HEIGHT));
-            while (foundFood()) {
+            while (board.snakeFoundFood()) {
                 food = new BoardCoordinate(random.nextInt(Board.WIDTH), random.nextInt(Board.HEIGHT));
             }
             foodList.add(new BoardCoordinate(food));
