@@ -19,10 +19,6 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
     private int lifeLeft = 200;  // amount of moves the snake can make before it dies
     private int lifetime = 0;  // amount of time the snake has been alive
 
-    private float[] vision = new float[24];
-    private float[] decision = new float[4];
-    private BoardCoordinate velocity = new BoardCoordinate(0, 0);
-
     private BoardCoordinate head = new BoardCoordinate(0, 0); // TODO - random?
     private List<BoardCoordinate> body = new ArrayList<>();
 
@@ -87,22 +83,28 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         return Board.wallCollision(head);
     }
 
-    private void move() {
-        if (!dead) {
-            lifetime++;
-            lifeLeft--;
-            if (foundFood()) {
-                eat();
-            }
-            shiftBody();
-            if (wallCollision()) {
-                dead = true;
-            } else if (bodyCollision()) {
-                dead = true;
-            } else if (lifeLeft <= 0) {
-                dead = true;
-            }
+    private void move() {  // TODO - change to 'tick'
+        if (dead) {
+            return;
         }
+
+        lifetime++;
+        lifeLeft--;
+        if (foundFood()) {
+            eat();
+        }
+
+        realMove();
+
+        if (wallCollision() || bodyCollision() || lifeLeft <= 0) {
+            dead = true;
+        }
+    }
+
+    private void realMove() {  // TODO - change to 'move'
+        float[] vision = look();
+        BoardCoordinate velocity = think(vision);
+        shiftBody(velocity);
     }
 
     private void eat() {
@@ -127,7 +129,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         }
     }
 
-    private void shiftBody() {  // shift the body to follow the head
+    private void shiftBody(BoardCoordinate velocity) {  // shift the body to follow the head
         BoardCoordinate temp1 = new BoardCoordinate(head);
         head.add(velocity);
 
@@ -158,7 +160,7 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
     }
 
     private float[] look() {  // look in all 8 directions and check for food, body and wall
-        vision = new float[24];
+        float[] vision = new float[24];
 
         int k = 0;
         for (int i = -1; i <= 1; i++) {
@@ -199,5 +201,23 @@ public class Snake extends GameObject implements Mutable, Combinable<Snake> {
         }
         result[2] = 1 / distance;
         return result;
+    }
+
+    private BoardCoordinate think(float[] vision) {  // think about what direction to move
+        int decision = brain.output(vision);
+
+        switch(decision) {
+            case 0:
+                return new BoardCoordinate(-1, 0);
+            case 1:
+                return new BoardCoordinate(1, 0);
+            case 2:
+                return new BoardCoordinate(0, -1);
+            case 3:
+                return new BoardCoordinate(0, 1);
+            default:
+                System.err.println("Something went wrong. The snake didn't make any decision where to move to. The decision he made was: " + decision);
+                return new BoardCoordinate(0, 0);
+        }
     }
 }
