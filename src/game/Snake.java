@@ -59,4 +59,12 @@ public class Snake extends GameObject {
         foodItterate++;
     }
 
+    boolean collision(BoardCoordinate other) {  //check if a position collides with the snakes body
+        for (BoardCoordinate body_part : body) {
+            if (other.x == body_part.x && other.y == body_part.y) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
