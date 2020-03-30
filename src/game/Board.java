@@ -14,14 +14,14 @@ public class Board {
     private int width;
     private int height;
 
-    private Snake snake;
+    private BaseSnake snake;
     private BoardCoordinate food;
 
 
     private List<BoardCoordinate> foodList;  // list of food positions (used to replay the best snake)
     private int foodIndex = 0;  // itterator to run through the foodlist (used for replay)
 
-    private Board(Snake snake, int width, int height, boolean initiateFood) {
+    private Board(BaseSnake snake, int width, int height, boolean initiateFood) {
         this.width = width;
         this.height = height;
         this.snake = snake;
@@ -32,15 +32,15 @@ public class Board {
         }
     }
 
-    public Board(Snake snake, int width, int height) {
+    public Board(BaseSnake snake, int width, int height) {
         this(snake, width, height, true);
     }
 
-    public Board(Snake snake) {
+    public Board(BaseSnake snake) {
         this(snake, Board.WIDTH, Board.HEIGHT);
     }
 
-    public Board(Snake snake, List<BoardCoordinate> foods) {
+    public Board(BaseSnake snake, List<BoardCoordinate> foods) {
         this(snake, Board.WIDTH, Board.HEIGHT, false);
 
         foodList = new ArrayList<>(foods.size());

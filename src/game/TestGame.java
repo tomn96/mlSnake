@@ -72,7 +72,7 @@ public class TestGame implements Runnable, Tickable, Renderable {
     }
 
     public static void main(String[] args) {
-        Game g = new Game();
+        TestGame g = new TestGame();
         g.start();
     }
 }
