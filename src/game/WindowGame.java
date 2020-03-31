@@ -3,10 +3,10 @@ package game;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
-public class TestGame extends Game {
+public class WindowGame extends Game {
     SmartSnake snake;
 
-    public TestGame() {
+    public WindowGame() {
         snake = new SmartSnake();
         new Window(640, 480, "Snake", this);
     }
@@ -35,6 +35,6 @@ public class TestGame extends Game {
     }
 
     public static void main(String[] args) {
-        TestGame g = new TestGame();
+        WindowGame g = new WindowGame();
     }
 }
