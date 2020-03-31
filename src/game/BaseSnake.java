@@ -27,6 +27,10 @@ public abstract class BaseSnake extends GameObject {
         return board;
     }
 
+    public boolean isDead() {
+        return dead;
+    }
+
     public List<BoardCoordinate> getCoordinates() {
         List<BoardCoordinate> result = new ArrayList<>(1 + body.size());
         result.add(head);

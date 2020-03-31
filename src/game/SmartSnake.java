@@ -23,12 +23,20 @@ public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSn
         initialHead = new BoardCoordinate(head);
     }
 
-    public SmartSnake(Board board) {
-        this(board, new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
+//    public SmartSnake(Board board) {
+//        this(board, new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
+//    }
+
+    public SmartSnake(Brain brain) {
+        this(new SimpleBoard(), brain);
     }
 
     public SmartSnake() {
-        this(new SimpleBoard());
+        this(new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
+    }
+
+    public static SmartSnake clone(SmartSnake smartSnake) {
+        return new SmartSnake(smartSnake.brain);
     }
 
     public static SmartSnake copy(SmartSnake smartSnake) {
@@ -144,7 +152,11 @@ public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSn
         brain.mutate(rate);
     }
 
-    private float fitness() {
+    public int getScore() {
+        return score;
+    }
+
+    public float fitness() {
         int a = Math.min(10, score);
         int b = Math.max(1, score - 9);
         return (float) (Math.floor(lifetime * lifetime) * Math.pow(2, a) * b);
