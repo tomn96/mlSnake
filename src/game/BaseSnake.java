@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseSnake extends GameObject {
+
     protected Board board;
-
-    protected boolean dead = false;
-
     protected BoardCoordinate head;
+
     protected List<BoardCoordinate> body = new ArrayList<>();
+    protected boolean dead = false;
 
     public BaseSnake() {
         board = new Board(this);

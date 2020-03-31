@@ -5,7 +5,9 @@ import evolution.Combinable;
 import evolution.Mutable;
 
 public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSnake> {
+    private static final int INPUT_NODES = 24;
     private static final int HIDDEN_NODES = 16;
+    private static final int OUTPUT_NODES = 4;
     private static final int HIDDEN_LAYERS = 2;
 
     private int score = 3;
@@ -13,17 +15,23 @@ public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSn
     private int lifetime = 0;  // amount of time the snake has been alive
 
     private Brain brain;
+    private BoardCoordinate initialHead;
 
     public SmartSnake(Brain brain) {
-        if (brain == null) {
-            this.brain = new Brain(24, SmartSnake.HIDDEN_NODES, 4, SmartSnake.HIDDEN_LAYERS);
-        } else {
-            this.brain = new Brain(brain);
-        }
+        this.brain = new Brain(brain);
+        initialHead = new BoardCoordinate(head);
     }
 
     public SmartSnake() {
-        this(null);
+        this(new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
+    }
+
+    public static SmartSnake copy(SmartSnake smartSnake) {
+        SmartSnake result = new SmartSnake(smartSnake.brain);
+        result.head = new BoardCoordinate(smartSnake.initialHead);
+        result.initialHead = new BoardCoordinate(smartSnake.initialHead);
+        result.board = Board.copy(result, smartSnake.board);
+        return result;
     }
 
     @Override
@@ -57,7 +65,7 @@ public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSn
     }
 
     private float[] look() {  // look in all 8 directions and check for food, body and wall
-        float[] vision = new float[24];
+        float[] vision = new float[SmartSnake.INPUT_NODES];
 
         int k = 0;
         for (int i = -1; i <= 1; i++) {

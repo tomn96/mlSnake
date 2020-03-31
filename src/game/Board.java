@@ -13,13 +13,11 @@ public class Board {
 
     private int width;
     private int height;
-
     private BaseSnake snake;
     private BoardCoordinate food;
-
-
     private List<BoardCoordinate> foodList;  // list of food positions (used to replay the best snake)
-    private int foodIndex = 0;  // itterator to run through the foodlist (used for replay)
+
+    private int foodIndex = 0;  // iterator to run through the foodlist (used for replay)
 
     private Board(BaseSnake snake, int width, int height, boolean initiateFood) {
         this.width = width;
@@ -29,6 +27,7 @@ public class Board {
             food = new BoardCoordinate(random.nextInt(this.width), random.nextInt(this.height));
             this.foodList = new ArrayList<>();
             this.foodList.add(this.food);
+            foodIndex++;
         }
     }
 
@@ -40,16 +39,27 @@ public class Board {
         this(snake, Board.WIDTH, Board.HEIGHT);
     }
 
-    public Board(BaseSnake snake, List<BoardCoordinate> foods) {
-        this(snake, Board.WIDTH, Board.HEIGHT, false);
+    private Board(BaseSnake snake, int width, int height, List<BoardCoordinate> foods) {
+        this(snake, width, height, false);
 
         foodList = new ArrayList<>(foods.size());
         for (BoardCoordinate f : foods) {
             foodList.add(new BoardCoordinate(f));
         }
 
-        food = new BoardCoordinate(foodList.get(foodIndex));
+        if (foodList.size() > 0) {
+            food = new BoardCoordinate(foodList.get(foodIndex));
+        } else {
+            food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
+            foodList = new ArrayList<>();
+            foodList.add(food);
+        }
         foodIndex++;
+    }
+
+
+    public static Board copy(BaseSnake snake, Board board) {
+        return new Board(snake, board.width, board.height, board.foodList);
     }
 
     public int getWidth() {
@@ -61,24 +71,16 @@ public class Board {
     }
 
     public void generateFood() {
-        food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
-        int tries = 0;
-        while (tries < MAX_TRIES_GENERATE_FOOD && (snakeFoundFood() || snake.bodyCollision(food))) {
+        if (foodIndex < foodList.size()) {
+            food = new BoardCoordinate(foodList.get(foodIndex));
+        } else {
             food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
-            tries++;
-        }
-        if (tries >= MAX_TRIES_GENERATE_FOOD) {
-            food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
-            tries = 0;
-            while (tries < MAX_TRIES_GENERATE_FOOD && snakeFoundFood()) {
-                food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
-                tries++;
-            }
-            if (tries >= MAX_TRIES_GENERATE_FOOD) {
+            while (snakeFoundFood() || snake.bodyCollision(food)) {  // TODO - might be infinite
                 food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
             }
+            foodList.add(new BoardCoordinate(food));
         }
-        foodList.add(new BoardCoordinate(food));
+        foodIndex++;
     }
 
     public boolean foundFood(BoardCoordinate bc) {
