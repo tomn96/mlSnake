@@ -1,9 +1,7 @@
 package game;
 
 import evolution.Brain;
-import evolution.Combinable;
 import evolution.Community;
-import evolution.Mutable;
 
 public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
     private static final int INPUT_NODES = 24;
@@ -34,6 +32,11 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
 
     public SmartSnake() {
         this(new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
+    }
+
+    @Override
+    public SmartSnake newIndividual() {
+        return new SmartSnake();
     }
 
     public SmartSnake copy(Board b) {

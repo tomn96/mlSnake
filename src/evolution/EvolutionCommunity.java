@@ -1,14 +1,13 @@
 package evolution;
 
-import game.SmartSnake;
 import game.Tickable;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class SnakeCommunity implements Tickable, Alive {
-
+public class EvolutionCommunity<T extends Community<T>> implements Tickable, Alive {
     private static final int DEFAULT_SIZE = 200;
     private static final float DEFAULT_MUTATION_RATE = 0.05f;
 
@@ -17,29 +16,29 @@ public class SnakeCommunity implements Tickable, Alive {
 
     private float mutationRate;
 
-    private SmartSnake[] snakes;
-    private SmartSnake bestSnake;
+    private List<T> snakes;
+    private T bestSnake;
 
     private float bestFitness = 0;
     private int bestSnakeScore = 0;
 //    private int samebest = 0;
 
-    public SnakeCommunity(int size, float mutationRate) {
+    public EvolutionCommunity(int size, float mutationRate, T sample) {
         this.mutationRate = mutationRate;
-        snakes = new SmartSnake[size];
-        for (int i = 0; i < snakes.length; i++) {
-            snakes[i] = new SmartSnake();
+        snakes = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            snakes.add(sample.newIndividual());
         }
-        bestSnake = snakes[0].copy();
+        bestSnake = snakes.get(0).copy();
     }
 
-    public SnakeCommunity() {
-        this(SnakeCommunity.DEFAULT_SIZE, SnakeCommunity.DEFAULT_MUTATION_RATE);
+    public EvolutionCommunity(T sample) {
+        this(EvolutionCommunity.DEFAULT_SIZE, EvolutionCommunity.DEFAULT_MUTATION_RATE, sample);
     }
 
     @Override
     public boolean isDead() {  // check if all the snakes in the population are dead
-        for (SmartSnake snake : snakes) {
+        for (T snake : snakes) {
             if (!snake.isDead()) {
                 return false;
             }
@@ -52,7 +51,7 @@ public class SnakeCommunity implements Tickable, Alive {
         if (!bestSnake.isDead()) {  // if the best snake is not dead update it, this snake is a replay of the best from the past generation
             bestSnake.tick();
         }
-        for (SmartSnake snake : snakes) {
+        for (T snake : snakes) {
             if (!snake.isDead()) {
                 snake.tick();
             }
@@ -62,8 +61,8 @@ public class SnakeCommunity implements Tickable, Alive {
     private void setBestSnake() {  // set the best snake of the generation
         float max = 0;
         int maxIndex = 0;
-        for (int i = 0; i < snakes.length; i++) {
-            float f = snakes[i].fitness();
+        for (int i = 0; i < snakes.size(); i++) {
+            float f = snakes.get(i).fitness();
             if (f > max) {
                 max = f;
                 maxIndex = i;
@@ -71,30 +70,30 @@ public class SnakeCommunity implements Tickable, Alive {
         }
 
         if (max > bestFitness) {
-            bestSnake = snakes[maxIndex].copy();
+            bestSnake = snakes.get(maxIndex).copy();
             bestFitness = max;
-            bestSnakeScore = snakes[maxIndex].getScore();
+            bestSnakeScore = snakes.get(maxIndex).getScore();
         } else {
             bestSnake = bestSnake.copy();
         }
     }
 
-    private SmartSnake selectParent() {  // selects a random number in range of the fitnesssum and if a snake falls in that range then select it
+    private T selectParent() {  // selects a random number in range of the fitnesssum and if a snake falls in that range then select it
         Random random = new Random();
         float rand = random.nextInt((int) fitnessSum());
         float summation = 0;
-        for (SmartSnake snake : snakes) {
+        for (T snake : snakes) {
             summation += snake.fitness();
             if (summation > rand) {
                 return snake;
             }
         }
-        return snakes[0];
+        return snakes.get(0);
     }
 
     private float fitnessSum() {  // calculate the sum of all the snakes fitnesses
         float result = 0;
-        for (SmartSnake snake : snakes) {
+        for (T snake : snakes) {
             result += snake.fitness();
         }
         return result;
@@ -103,12 +102,12 @@ public class SnakeCommunity implements Tickable, Alive {
     public void naturalSelection() {
         setBestSnake();
 
-        SmartSnake[] newSnakes = new SmartSnake[snakes.length];
-        newSnakes[0] = bestSnake.copy();  // add the best snake of the prior generation into the new generation
-        for(int i = 1; i < snakes.length; i++) {
-            SmartSnake child = selectParent().combine(selectParent());
+        List<T> newSnakes = new ArrayList<>(snakes.size());
+        newSnakes.add(bestSnake.copy());  // add the best snake of the prior generation into the new generation
+        for(int i = 1; i < snakes.size(); i++) {
+            T child = selectParent().combine(selectParent());
             child.mutate(mutationRate);
-            newSnakes[i] = child;
+            newSnakes.add(child);
         }
         snakes = newSnakes;
         evolution.add(bestSnakeScore);
