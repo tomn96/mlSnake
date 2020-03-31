@@ -14,7 +14,7 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
     private static final float MAX_MUTATION_RATE = 0.35f;
 
     private List<Integer> evolutionScore = new LinkedList<>();
-    private List<Float> evolutionFitness = new LinkedList<>();
+    private List<Double> evolutionFitness = new LinkedList<>();
     private int generation = 0;
 
     private float mutationRate;
@@ -22,7 +22,7 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
     private List<T> snakes;
     private T bestSnake;
 
-    private float bestFitness = 0;
+    private double bestFitness = 0;
     private int bestSnakeScore = 0;
 
     private int sameBest = 0;
@@ -68,10 +68,10 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
     }
 
     private void setBestSnake() {  // set the best snake of the generation
-        float max = 0;
+        double max = 0;
         int maxIndex = 0;
         for (int i = 0; i < snakes.size(); i++) {
-            float f = snakes.get(i).fitness();
+            double f = snakes.get(i).fitness();
             if (f > max) {
                 max = f;
                 maxIndex = i;
@@ -98,8 +98,8 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
 
     private T selectParent() {  // selects a random number in range of the fitnesssum and if a snake falls in that range then select it
         Random random = new Random();
-        float rand = random.nextInt((int) fitnessSum());
-        float summation = 0;
+        int rand = random.nextInt((int) Math.floor(fitnessSum()));
+        double summation = 0;
         for (T snake : snakes) {
             summation += snake.fitness();
             if (summation > rand) {
@@ -109,8 +109,8 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         return snakes.get(0);
     }
 
-    private float fitnessSum() {  // calculate the sum of all the snakes fitnesses
-        float result = 0;
+    private double fitnessSum() {  // calculate the sum of all the snakes fitnesses
+        double result = 0;
         for (T snake : snakes) {
             result += snake.fitness();
         }

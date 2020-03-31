@@ -168,9 +168,9 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
     }
 
     @Override
-    public float fitness() {
+    public double fitness() {
         int a = Math.min(10, score);
         int b = Math.max(1, score - 9);
-        return (float) (Math.floor(lifetime * lifetime) * Math.pow(2, a) * b);
+        return Math.floor(lifetime * lifetime) * Math.pow(2, a) * b;
     }
 }
