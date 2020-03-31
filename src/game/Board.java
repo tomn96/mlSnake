@@ -57,13 +57,19 @@ public abstract class Board {
         return height;
     }
 
+    public void setSnake(BaseSnake snake) {
+        this.snake = snake;
+    }
+
     public void generateFood() {
         if (foodIndex < foodList.size()) {
             food = new BoardCoordinate(foodList.get(foodIndex));
         } else {
             food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
-            while (snakeFoundFood() || snake.bodyCollision(food)) {  // TODO - might be infinite
-                food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
+            if (snake != null) {
+                while (snakeFoundFood() || snake.bodyCollision(food)) {  // TODO - might be infinite
+                    food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
+                }
             }
             foodList.add(new BoardCoordinate(food));
         }
@@ -77,6 +83,9 @@ public abstract class Board {
     }
 
     public boolean snakeFoundFood() {  // check if a snake found food
+        if (snake == null) {
+            return false;
+        }
         return collide(snake.getHead(), food);
     }
 
@@ -95,6 +104,9 @@ public abstract class Board {
     }
 
     private void stringifySnake(StringBuilder graphic) {
+        if (snake == null) {
+            return;
+        }
         for (BoardCoordinate coordinate : snake.getCoordinates()) {
             stringifyCoordinate(graphic, coordinate, 'x');
         }

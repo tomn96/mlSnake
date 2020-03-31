@@ -11,13 +11,17 @@ public class RenderBoard extends Board implements Renderable<Graphics> {
 
     private float e;
 
-    public RenderBoard(BaseSnake snake, float epsilon) {
+    protected RenderBoard(BaseSnake snake, float epsilon) {
         super(snake, RenderBoard.WIDTH, RenderBoard.HEIGHT);
         e = Math.max(0, epsilon);
     }
 
     public RenderBoard(BaseSnake snake) {
         this(snake, RenderBoard.EPSILON);
+    }
+
+    public RenderBoard() {
+        this(null);
     }
 
     @Override
@@ -35,14 +39,16 @@ public class RenderBoard extends Board implements Renderable<Graphics> {
         object.setColor(Color.RED);
         object.fillRect((int)food.x, (int)food.y, 10, 10);
 
-        // TODO - fix snake
-        object.setColor(Color.GREEN);
-        List<BoardCoordinate> coordinates = snake.getCoordinates();
-        for (int i = 0; i < coordinates.size(); i++) {
-            object.fillRect((int)coordinates.get(i).x + i * 10, (int)coordinates.get(i).y + i * 10, 10, 10);
+        if (snake != null) {
+            // TODO - fix snake
+            object.setColor(Color.GREEN);
+            List<BoardCoordinate> coordinates = snake.getCoordinates();
+            for (int i = 0; i < coordinates.size(); i++) {
+                object.fillRect((int) coordinates.get(i).x + i * 10, (int) coordinates.get(i).y + i * 10, 10, 10);
+            }
+//            for (BoardCoordinate coordinate : snake.getCoordinates()) {
+//                object.fillRect((int)coordinate.x, (int)coordinate.y, 10, 10);
+//            }
         }
-//        for (BoardCoordinate coordinate : snake.getCoordinates()) {
-//            object.fillRect((int)coordinate.x, (int)coordinate.y, 10, 10);
-//        }
     }
 }

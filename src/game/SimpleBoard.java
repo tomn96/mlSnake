@@ -10,6 +10,10 @@ public class SimpleBoard extends Board {
         super(snake, SimpleBoard.WIDTH, SimpleBoard.HEIGHT);
     }
 
+    public SimpleBoard() {
+        this(null);
+    }
+
     protected SimpleBoard(BaseSnake snake, int width, int height, List<BoardCoordinate> foods) {
         super(snake, width, height, foods);
     }
