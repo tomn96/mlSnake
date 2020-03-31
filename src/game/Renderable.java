@@ -2,6 +2,6 @@ package game;
 
 import java.awt.*;
 
-public interface Renderable {
-    void render(Graphics g);
+public interface Renderable<T> {
+    void render(T object);
 }

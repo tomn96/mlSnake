@@ -1,12 +1,13 @@
 package game;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Board {
-    public static final int WIDTH = 10;
-    public static final int HEIGHT = 10;
+public class Board implements Renderable<Graphics> {
+    public static final int WIDTH = 640;
+    public static final int HEIGHT = 480;
     private static final int MAX_TRIES_GENERATE_FOOD = 1000;
 
     private Random random = new Random();
@@ -124,5 +125,26 @@ public class Board {
             result.insert((i * width) + i - 1, "\n");
         }
         return result.toString();
+    }
+
+//    @Override
+//    public void render(Graphics object) {
+//        object.setColor(Color.BLACK);
+//        String all = this.toString();
+//        String[] lines = all.split("\n");
+//        for (int i = 0; i < lines.length; i++) {
+//            object.drawString(lines[i], 10, 10 + (i*5));
+//        }
+//    }
+
+    @Override
+    public void render(Graphics object) {
+        object.setColor(Color.RED);
+        object.fillRect((int)food.x, (int)food.y, 10, 10);
+
+        object.setColor(Color.GREEN);
+        for (BoardCoordinate coordinate : snake.getCoordinates()) {
+            object.fillRect((int)coordinate.x, (int)coordinate.y, 10, 10);
+        }
     }
 }

@@ -1,6 +1,8 @@
 package game;
 
-public abstract class Game implements Runnable, Tickable, Renderable {
+import java.awt.*;
+
+public abstract class Game extends Canvas implements Runnable, Tickable, Renderable<Object> {
     private Thread thread;
     private boolean running = false;
 
