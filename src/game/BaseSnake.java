@@ -1,9 +1,11 @@
 package game;
 
+import evolution.Alive;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseSnake extends GameObject {
+public abstract class BaseSnake extends GameObject implements Alive {
 
     protected Board board;
     protected BoardCoordinate head;
@@ -27,6 +29,7 @@ public abstract class BaseSnake extends GameObject {
         return board;
     }
 
+    @Override
     public boolean isDead() {
         return dead;
     }

@@ -10,7 +10,7 @@ import java.util.Random;
 public class SnakeCommunity implements Tickable {
 
     private static final int DEFAULT_SIZE = 200;
-    private static final float DEFAULT_MUTATION_RATE = 0.1f;
+    private static final float DEFAULT_MUTATION_RATE = 0.05f;
 
     private List<Integer> evolution = new LinkedList<>();
     private int generation = 0;
@@ -30,7 +30,7 @@ public class SnakeCommunity implements Tickable {
         for (int i = 0; i < snakes.length; i++) {
             snakes[i] = new SmartSnake();
         }
-        bestSnake = SmartSnake.clone(snakes[0]);
+        bestSnake = snakes[0].copy();
     }
 
     public SnakeCommunity() {
@@ -70,11 +70,11 @@ public class SnakeCommunity implements Tickable {
         }
 
         if (max > bestFitness) {
-            bestSnake = SmartSnake.clone(snakes[maxIndex]);
+            bestSnake = snakes[maxIndex].copy();
             bestFitness = max;
             bestSnakeScore = snakes[maxIndex].getScore();
         } else {
-            bestSnake = SmartSnake.clone(bestSnake);
+            bestSnake = bestSnake.copy();
         }
     }
 
@@ -100,11 +100,10 @@ public class SnakeCommunity implements Tickable {
     }
 
     public void naturalSelection() {
-        SmartSnake[] newSnakes = new SmartSnake[snakes.length];
-
         setBestSnake();
 
-        newSnakes[0] = SmartSnake.clone(bestSnake);  // add the best snake of the prior generation into the new generation
+        SmartSnake[] newSnakes = new SmartSnake[snakes.length];
+        newSnakes[0] = bestSnake.copy();  // add the best snake of the prior generation into the new generation
         for(int i = 1; i < snakes.length; i++) {
             SmartSnake child = selectParent().combine(selectParent());
             child.mutate(mutationRate);

@@ -2,9 +2,10 @@ package game;
 
 import evolution.Brain;
 import evolution.Combinable;
+import evolution.Community;
 import evolution.Mutable;
 
-public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSnake> {
+public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
     private static final int INPUT_NODES = 24;
     private static final int HIDDEN_NODES = 16;
     private static final int OUTPUT_NODES = 4;
@@ -35,17 +36,21 @@ public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSn
         this(new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
     }
 
-    public static SmartSnake clone(SmartSnake smartSnake) {
-        return new SmartSnake(smartSnake.brain);
+    public SmartSnake copy(Board b) {
+        SmartSnake result = new SmartSnake(b, this.brain);
+        result.head = new BoardCoordinate(this.initialHead);
+        result.initialHead = new BoardCoordinate(this.initialHead);
+        return result;
     }
 
-    public static SmartSnake copy(SmartSnake smartSnake) {
-        Board board = SimpleBoard.copy((SimpleBoard) smartSnake.board);
+    @Override
+    public SmartSnake copy() {
+        Board b = SimpleBoard.copy((SimpleBoard) this.board);
+        return copy(b);
+    }
 
-        SmartSnake result = new SmartSnake(board, smartSnake.brain);
-        result.head = new BoardCoordinate(smartSnake.initialHead);
-        result.initialHead = new BoardCoordinate(smartSnake.initialHead);
-        return result;
+    public SmartSnake copyNewBoard() {
+        return copy(new SimpleBoard());
     }
 
     @Override
@@ -152,10 +157,12 @@ public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSn
         brain.mutate(rate);
     }
 
+    @Override
     public int getScore() {
         return score;
     }
 
+    @Override
     public float fitness() {
         int a = Math.min(10, score);
         int b = Math.max(1, score - 9);
