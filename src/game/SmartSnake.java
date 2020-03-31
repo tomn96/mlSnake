@@ -9,8 +9,8 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
     private static final int OUTPUT_NODES = 4;
     private static final int HIDDEN_LAYERS = 2;
 
-    private int score = 3;
-    private int lifeLeft = 200;  // amount of moves the snake can make before it dies
+    private int score = 1;
+    private int lifeLeft = 0;  // don't worry - going to be 200. amount of moves the snake can make before it dies
     private int lifetime = 0;  // amount of time the snake has been alive
 
     private Brain brain;
@@ -20,6 +20,8 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
         super(board);
         this.brain = new Brain(brain);
         initialHead = new BoardCoordinate(head);
+        this.eat();
+        this.eat();
     }
 
 //    public SmartSnake(Board board) {

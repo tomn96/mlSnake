@@ -1,22 +1,29 @@
 package game;
 
 public class CmdGame extends Game {
-    VisionSnake snake;
+    SmartSnake snake;
 
     public CmdGame() {
-        snake = new VisionSnake(new SimpleBoard());
+        snake = new SmartSnake();
         this.start();
     }
 
     @Override
     public void render(Object object) {
         System.out.println(snake.getBoard());
+        if (snake.isDead()) {
+            System.out.println("DEAD!");
+        }
         System.out.println("");
     }
 
     @Override
     public void tick() {
-        snake.tick();
+        if (!snake.isDead()) {
+            snake.tick();
+        } else {
+            snake = new SmartSnake();
+        }
     }
 
     public static void main(String[] args) {
