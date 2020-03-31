@@ -1,8 +1,9 @@
 package game;
 
+import java.awt.*;
 import java.util.List;
 
-public class SimpleBoard extends Board {
+public class SimpleBoard extends Board implements Renderable<Graphics> {
     public static final int WIDTH = 38;
     public static final int HEIGHT = 38;
 
@@ -32,13 +33,14 @@ public class SimpleBoard extends Board {
         return new SimpleBoard(null, board.width, board.height, board.foodList);
     }
 
-//    @Override
-//    public void render(Graphics object) {
-//        object.setColor(Color.BLACK);
-//        String all = this.toString();
-//        String[] lines = all.split("\n");
-//        for (int i = 0; i < lines.length; i++) {
-//            object.drawString(lines[i], 10, 10 + (i*5));
-//        }
-//    }
+    @Override
+    public void render(Graphics object) {
+        object.setColor(Color.BLACK);
+        object.drawString("Score: " + ((SmartSnake) snake).getScore(), 100, 25);
+        String all = this.toString();
+        String[] lines = all.split("\n");
+        for (int i = 0; i < lines.length; i++) {
+            object.drawString(lines[i], 50, 50 + (i*10));
+        }
+    }
 }
