@@ -3,8 +3,8 @@ package game;
 import java.util.List;
 
 public class SimpleBoard extends Board {
-    public static final int WIDTH = 100;
-    public static final int HEIGHT = 100;
+    public static final int WIDTH = 10;
+    public static final int HEIGHT = 10;
 
     public SimpleBoard(BaseSnake snake) {
         super(snake, SimpleBoard.WIDTH, SimpleBoard.HEIGHT);
