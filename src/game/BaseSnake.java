@@ -34,7 +34,7 @@ public abstract class BaseSnake extends GameObject {
 
     public boolean bodyCollision(BoardCoordinate other) {  // check if snake collides with itself
         for (BoardCoordinate bc : body) {
-            if (board.collide(other, bc)) {
+            if (other.equals(bc)) {
                 return true;
             }
         }
