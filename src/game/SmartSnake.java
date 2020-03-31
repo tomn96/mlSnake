@@ -17,22 +17,22 @@ public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSn
     private Brain brain;
     private BoardCoordinate initialHead;
 
-    public SmartSnake(Brain brain) {
+    public SmartSnake(Board board, Brain brain) {
+        super(board);
         this.brain = new Brain(brain);
-        board = new SimpleBoard(this);
-        createHead();
         initialHead = new BoardCoordinate(head);
     }
 
-    public SmartSnake() {
-        this(new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
+    public SmartSnake(Board board) {
+        this(board, new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
     }
 
     public static SmartSnake copy(SmartSnake smartSnake) {
-        SmartSnake result = new SmartSnake(smartSnake.brain);
+        Board board = SimpleBoard.copy((SimpleBoard) smartSnake.board);
+
+        SmartSnake result = new SmartSnake(board, smartSnake.brain);
         result.head = new BoardCoordinate(smartSnake.initialHead);
         result.initialHead = new BoardCoordinate(smartSnake.initialHead);
-        result.board = SimpleBoard.copy(result, (SimpleBoard) smartSnake.board);
         return result;
     }
 
@@ -130,7 +130,7 @@ public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSn
 
     @Override
     public SmartSnake combine(SmartSnake other) {
-        SmartSnake combined = new SmartSnake();
+        SmartSnake combined = new SmartSnake(new SimpleBoard());
         combined.brain = this.brain.combine(other.brain);
         return combined;
     }

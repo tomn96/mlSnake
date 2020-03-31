@@ -11,9 +11,11 @@ public abstract class BaseSnake extends GameObject {
     protected List<BoardCoordinate> body = new ArrayList<>();
     protected boolean dead = false;
 
-    protected void createHead() {
-        int x = math.Utils.marginRandom(board.getWidth());
-        int y = math.Utils.marginRandom(board.getHeight());
+    public BaseSnake(Board board) {
+        this.board = board;
+        this.board.setSnake(this);
+        int x = math.Utils.marginRandom(this.board.getWidth());
+        int y = math.Utils.marginRandom(this.board.getHeight());
         this.head = new BoardCoordinate(x, y);
     }
 

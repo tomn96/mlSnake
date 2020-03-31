@@ -28,8 +28,8 @@ public class SimpleBoard extends Board {
         return boardCoordinate.x < 0 || boardCoordinate.x >= width || boardCoordinate.y < 0 || boardCoordinate.y >= height;
     }
 
-    public static SimpleBoard copy(BaseSnake snake, SimpleBoard board) {
-        return new SimpleBoard(snake, board.width, board.height, board.foodList);
+    public static SimpleBoard copy(SimpleBoard board) {
+        return new SimpleBoard(null, board.width, board.height, board.foodList);
     }
 
 //    @Override

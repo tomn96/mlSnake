@@ -7,9 +7,8 @@ public class HumanSnake extends BaseSnake implements KeyListener {
 
     BoardCoordinate velocity;
 
-    public HumanSnake() {
-        board = new RenderBoard(this);
-        createHead();
+    public HumanSnake(Board board) {
+        super(board);
         velocity = new BoardCoordinate(0, 0);
     }
 

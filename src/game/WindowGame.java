@@ -7,7 +7,7 @@ public class WindowGame extends Game {
     HumanSnake snake;
 
     public WindowGame() {
-        snake = new HumanSnake();
+        snake = new HumanSnake(new RenderBoard());
         new Window(640, 480, "Snake", this);
         this.addKeyListener(snake);
     }

@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class VisionSnake extends SmartSnake {
+public class VisionSnake extends BaseSnake {
 
     private List<BoardCoordinate> directions;
     BoardCoordinate decision;
 
-    public VisionSnake() {
+    public VisionSnake(Board board) {
+        super(board);
         BoardCoordinate up = new BoardCoordinate(0, -1);
         BoardCoordinate down = new BoardCoordinate(0, 1);
         BoardCoordinate left = new BoardCoordinate(-1, 0);

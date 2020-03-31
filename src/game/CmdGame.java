@@ -4,7 +4,7 @@ public class CmdGame extends Game {
     VisionSnake snake;
 
     public CmdGame() {
-        snake = new VisionSnake();
+        snake = new VisionSnake(new SimpleBoard());
         this.start();
     }
 
