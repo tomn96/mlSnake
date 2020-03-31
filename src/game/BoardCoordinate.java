@@ -20,6 +20,10 @@ public class BoardCoordinate {
         this.y += boardCoordinate.y;
     }
 
+    public static float distance(BoardCoordinate a, BoardCoordinate b) {
+        return (float) Math.sqrt(((a.x - b.x)*(a.x - b.x)) + ((a.y - b.y)*(a.y - b.y)));
+    }
+
     @Override
     public String toString() {
         return "(" + x + ", " + y + ')';

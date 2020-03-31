@@ -8,7 +8,7 @@ public abstract class Game extends Canvas implements Runnable, Tickable, Rendera
 
     @Override
     public void run() {
-        double amountOfTicksPerSec = 60.0;
+        double amountOfTicksPerSec = 5.0;
         double ns = Math.pow(10, 9) / amountOfTicksPerSec;
         double delta = 0;
         int frames = 0;
@@ -19,12 +19,13 @@ public abstract class Game extends Canvas implements Runnable, Tickable, Rendera
             delta += (now - lastTime) / ns;
             lastTime = now;
             while (delta >= 1){
+                render(null);
                 tick();
                 delta--;
             }
-            if (running) {
-                render(null);
-            }
+//            if (running) {
+//                render(null);
+//            }
 
             frames++;
             if (System.currentTimeMillis() - timer > 1000) {

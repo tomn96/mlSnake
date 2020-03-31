@@ -4,11 +4,12 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 public class WindowGame extends Game {
-    SmartSnake snake;
+    HumanSnake snake;
 
     public WindowGame() {
-        snake = new SmartSnake();
+        snake = new HumanSnake();
         new Window(640, 480, "Snake", this);
+        this.addKeyListener(snake);
     }
 
     @Override
@@ -23,7 +24,7 @@ public class WindowGame extends Game {
 
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, 640, 480);
-        snake.getBoard().render(g);
+        ((RenderBoard)snake.getBoard()).render(g);
 
         g.dispose();
         bs.show();

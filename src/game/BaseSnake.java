@@ -11,9 +11,7 @@ public abstract class BaseSnake extends GameObject {
     protected List<BoardCoordinate> body = new ArrayList<>();
     protected boolean dead = false;
 
-    public BaseSnake() {
-        board = new Board(this);
-
+    protected void createHead() {
         int x = math.Utils.marginRandom(board.getWidth());
         int y = math.Utils.marginRandom(board.getHeight());
         this.head = new BoardCoordinate(x, y);
@@ -36,7 +34,7 @@ public abstract class BaseSnake extends GameObject {
 
     public boolean bodyCollision(BoardCoordinate other) {  // check if snake collides with itself
         for (BoardCoordinate bc : body) {
-            if (other.equals(bc)) {
+            if (board.collide(other, bc)) {
                 return true;
             }
         }

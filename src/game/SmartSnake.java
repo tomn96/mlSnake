@@ -19,6 +19,8 @@ public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSn
 
     public SmartSnake(Brain brain) {
         this.brain = new Brain(brain);
+        board = new SimpleBoard(this);
+        createHead();
         initialHead = new BoardCoordinate(head);
     }
 
@@ -30,7 +32,7 @@ public class SmartSnake extends BaseSnake implements Mutable, Combinable<SmartSn
         SmartSnake result = new SmartSnake(smartSnake.brain);
         result.head = new BoardCoordinate(smartSnake.initialHead);
         result.initialHead = new BoardCoordinate(smartSnake.initialHead);
-        result.board = Board.copy(result, smartSnake.board);
+        result.board = SimpleBoard.copy(result, (SimpleBoard) smartSnake.board);
         return result;
     }
 
