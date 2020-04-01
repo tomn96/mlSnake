@@ -37,6 +37,10 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         this(EvolutionCommunity.DEFAULT_SIZE, EvolutionCommunity.DEFAULT_MUTATION_RATE, initial);
     }
 
+    public int getHighScore() {
+        return highScore;
+    }
+
     public T getHighScoreSnake() {
         return highScoreSnake;
     }
@@ -139,7 +143,7 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
     public String toString() {
         return "Generation: " + generation + ", MutationRate: " + mutationRate + '\n' +
         "HighScore: " + highScore + ", Achieved at Generation: " + highScoreGeneration + '\n' +
-        "Scores: \n" + EvolutionCommunity.bigListStringify(evolutionScore) + "\nFitness: \n" + EvolutionCommunity.bigListStringify(evolutionFitness);
+        "Scores: " + EvolutionCommunity.bigListStringify(evolutionScore) + "\nFitness: " + EvolutionCommunity.bigListStringify(evolutionFitness);
     }
 
     public void iterate() {
@@ -153,5 +157,19 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         for (int i = 0; i < n; i++) {
             iterate();
         }
+    }
+
+    public void runIfMakeThis(int generation, int score, boolean print) {
+        while (this.generation < generation || this.highScore >= score) {
+            iterate();
+            if (print) {
+                System.out.println(this);
+                System.out.println("");
+            }
+        }
+    }
+
+    public void runIfMakeThis(int generation, int score) {
+        runIfMakeThis(generation, score, false);
     }
 }

@@ -84,7 +84,7 @@ public class EvolutionCommunityWithBest<T extends Community<T>> extends Evolutio
 
     @Override
     public String toString() {
-        return super.toString() + "\nBestScores: \n" + EvolutionCommunity.bigListStringify(bestEvolutionScore) +
-                "\nBestFitness: \n" + EvolutionCommunity.bigListStringify(bestEvolutionFitness);
+        return super.toString() + "\nBestScores: " + EvolutionCommunity.bigListStringify(bestEvolutionScore) +
+                "\nBestFitness: " + EvolutionCommunity.bigListStringify(bestEvolutionFitness);
     }
 }
