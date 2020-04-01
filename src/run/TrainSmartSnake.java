@@ -17,21 +17,21 @@ public class TrainSmartSnake {
 
         int[][] conditions = {{30, 10}, {100, 50}, {200, 75}, {500, 100}, {1000, 150}, {10000, 300}};
 
-        String path = "~/Desktop/train_1";
-        (new File(path)).mkdirs();
+        String path = "train_1";
+        (new File(path)).mkdir();
 
         LocalDateTime time;
         String fullname;
         while (true) {
             time = LocalDateTime.now();
             fullname = path + "/" + time.toString() + "_withbest";
-            (new File(fullname)).mkdirs();
+            (new File(fullname)).mkdir();
             ec1.runIfMakeConditions(conditions, true, fullname);
             ec1 = new EvolutionCommunityWithBest<>(new SmartSnake());
 
             time = LocalDateTime.now();
             fullname = path + "/" + time.toString() + "_normal";
-            (new File(fullname)).mkdirs();
+            (new File(fullname)).mkdir();
             ec2.runIfMakeConditions(conditions, true, fullname);
             ec2 = new EvolutionCommunity<>(new SmartSnake());
         }
