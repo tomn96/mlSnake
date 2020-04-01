@@ -1,7 +1,10 @@
 package evolution;
 
+import game.BaseSnake;
 import game.Tickable;
+import run.Saver;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class EvolutionCommunity<T extends Community<T>> implements Tickable, Alive {
@@ -24,6 +27,8 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
     protected int highScoreGeneration = 0;
 
     private double tempFitnessSum = 0;
+
+    private T best;
 
     public EvolutionCommunity(int size, float mutationRate, int legacy, T initial) {
         this.mutationRate = Math.min(mutationRate, EvolutionCommunity.MAX_MUTATION_RATE);
@@ -95,6 +100,8 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         int maxScore = setHighScoreSnake();
         evolutionScore.add(maxScore);
         evolutionFitness.add(snakes.get(0).fitness());
+
+        best = snakes.get(0).copy();
     }
 
     protected void survival() {
@@ -165,8 +172,14 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         }
     }
 
-    public void runIfMakeConditions(int[][] conditions, boolean print) {
+    protected T getBest() {
+        return best;
+    }
+
+    public void runIfMakeConditions(int[][] conditions, boolean print, String path) {
         int g, s;
+        LocalDateTime time;
+        String name;
 
         boolean keep = true;
         while (keep) {
@@ -177,21 +190,32 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
                 System.out.println("");
             }
 
+            if (path != null) {
+                time = LocalDateTime.now();
+                name = time.toString() + "_" + generation + "_" + highScore;
+                Saver.saveSnake((BaseSnake) getBest(), path + "/" + name);  // TODO - no snake what so ever, only T!
+            }
+
             for (int[] condition : conditions) {
                 g = condition[0];
                 s = condition[1];
                 if (generation >= g && highScore < s) {
                     keep = false;
+                    if (path != null) {
+                        time = LocalDateTime.now();
+                        name = time.toString() + "_" + generation + "_" + highScore;
+                        Saver.saveSnake((BaseSnake) getHighScoreSnake(), path + "/" + name);  // TODO - no snake what so ever, only T!
+                    }
                     break;
                 }
             }
         }
     }
 
-    public void runIfMakeThis(int generation, int score, boolean print) {
-        int[][] conditions = {{generation, score}};
-        runIfMakeConditions(conditions, print);
-    }
+//    public void runIfMakeThis(int generation, int score, boolean print) {
+//        int[][] conditions = {{generation, score}};
+//        runIfMakeConditions(conditions, print);
+//    }
 
     protected static String bigListStringify(List<?> l) {
         StringBuilder result = new StringBuilder();
