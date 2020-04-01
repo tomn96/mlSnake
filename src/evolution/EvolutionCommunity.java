@@ -1,90 +1,157 @@
 package evolution;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import game.Tickable;
 
-public class EvolutionCommunity<T extends Community<T>> extends EvolutionCommunityBetter<T> {
+import java.util.*;
 
-    private List<Integer> bestEvolutionScore = new LinkedList<>();
-    private List<Double> bestEvolutionFitness = new LinkedList<>();
+public class EvolutionCommunity<T extends Community<T>> implements Tickable, Alive {
+    protected static final int DEFAULT_SIZE = 2000;
+    protected static final float DEFAULT_MUTATION_RATE = 0.1f;
+    protected static final float MAX_MUTATION_RATE = 0.35f;
 
-    private float initialMutationRate;
-    private int sameBest = 0;
+    private List<Integer> evolutionScore = new LinkedList<>();
+    private List<Double> evolutionFitness = new LinkedList<>();
+    private int generation = 0;
 
-    private T bestFitnessSnake;
+    protected float mutationRate;
+
+    protected List<T> snakes;
+
+    private T highScoreSnake = null;
+    private int highScore = 0;
+    private int highScoreGeneration = 0;
+
+    private double tempFitnessSum = 0;
 
     public EvolutionCommunity(int size, float mutationRate, T initial) {
-        super(size, mutationRate, initial);
+        this.mutationRate = Math.min(mutationRate, EvolutionCommunity.MAX_MUTATION_RATE);
 
-        this.initialMutationRate = this.mutationRate;
-        this.bestFitnessSnake = initial.copy();
+        snakes = new ArrayList<>(size);
+        snakes.add(initial.duplicate());
+        for (int i = 1; i < size; i++) {
+            snakes.add(initial.newIndividual());
+        }
     }
 
     public EvolutionCommunity(T initial) {
         this(EvolutionCommunity.DEFAULT_SIZE, EvolutionCommunity.DEFAULT_MUTATION_RATE, initial);
     }
 
+    public T getHighScoreSnake() {
+        return highScoreSnake;
+    }
+
     @Override
     public boolean isDead() {  // check if all the snakes in the population are dead
-        if (!bestFitnessSnake.isDead()) {
-            return false;
+        for (T snake : snakes) {
+            if (!snake.isDead()) {
+                return false;
+            }
         }
-        return super.isDead();
+        return true;
     }
 
     @Override
     public void tick() {  // update all the snakes in the generation
-        if (!bestFitnessSnake.isDead()) {  // if the best snake is not dead update it, this snake is a replay of the best from the past generation
-            bestFitnessSnake.tick();
-        }
-        super.tick();
-    }
-
-    private void fixMutationRate(boolean isBestSame) {
-        if (isBestSame) {
-            sameBest++;
-            if (sameBest % 3  == 0) {
-                mutationRate = (float) Math.min(mutationRate + 0.025, EvolutionCommunity.MAX_MUTATION_RATE);
+        for (T snake : snakes) {
+            if (!snake.isDead()) {
+                snake.tick();
             }
-        } else {
-            sameBest = 0;
-            mutationRate = initialMutationRate;
         }
     }
 
-    private void setBestFitnessSnake() {  // set the best snake of the generation
-        double bestFitness = bestFitnessSnake.fitness();
-        int bestFitnessSnakeScore = bestFitnessSnake.getScore();
-
-        double max = snakes.get(0).fitness();
-        if (max > bestFitness) {
-            bestFitnessSnake = snakes.get(0).copy();
-            bestFitness = max;
-            bestFitnessSnakeScore = snakes.get(0).getScore();
-            fixMutationRate(false);
-        } else {
-            bestFitnessSnake = bestFitnessSnake.copy();
-            fixMutationRate(true);
+    private T selectParent() {  // selects a random number in range of the fitnesssum and if a snake falls in that range then select it
+        Random random = new Random();
+        int rand = random.nextInt((int) Math.floor(fitnessSum()));
+        double summation = 0;
+        for (T snake : snakes) {
+            summation += snake.fitness();
+            if (summation > rand) {
+                return snake;
+            }
         }
-
-        bestEvolutionFitness.add(bestFitness);
-        bestEvolutionScore.add(bestFitnessSnakeScore);
+        return snakes.get(0);
     }
 
-    @Override
+    private void setData() {
+        int score = snakes.get(0).getScore();
+        evolutionScore.add(score);
+        evolutionFitness.add(snakes.get(0).fitness());
+
+        if (score > highScore) {
+            highScore = score;
+            highScoreGeneration = generation;
+            highScoreSnake = snakes.get(0).copy();
+        }
+    }
+
+    protected void sortSnakesByFitness() {
+        snakes.sort((t1, t2) -> (int) (t2.fitness() - t1.fitness()));
+        setData();
+    }
+
+    private void calcFitnessSum() {  // calculate the sum of all the snakes fitnesses
+        double result = 0;
+        for (T snake : snakes) {
+            result += snake.fitness();
+        }
+        tempFitnessSum = result;
+    }
+
+    private double fitnessSum() {
+        return tempFitnessSum;
+    }
+
+    protected void naturalSelectionHelper(List<T> newSnakes, int moreToAdd) {
+        int legacy = 20;
+        int i = 0;
+        for (; i < legacy && i < moreToAdd; i++) {
+            newSnakes.add(snakes.get(i).duplicate());
+        }
+        calcFitnessSum();
+        for(; i < moreToAdd; i++) {
+            T child = selectParent().combine(selectParent());
+            child.mutate(mutationRate);
+            newSnakes.add(child);
+        }
+        snakes = newSnakes;
+
+        generation++;
+    }
+
     public void naturalSelection() {
         sortSnakesByFitness();
-        setBestFitnessSnake();
+        naturalSelectionHelper(new ArrayList<>(snakes.size()), snakes.size());
+    }
 
-        List<T> newSnakes = new ArrayList<>(snakes.size());
-        newSnakes.add(bestFitnessSnake.duplicate());  // add the best snake of the prior generation into the new generation
-        naturalSelectionHelper(newSnakes, snakes.size() - 1);
+    protected static String bigListStringify(List<?> l) {
+        StringBuilder result = new StringBuilder();
+        int end = l.size();
+        int start = Math.max(0, end - 10);
+        if (start > 0) {
+            result.append("...");
+        }
+        result.append(l.subList(start, end).toString());
+        return result.toString();
     }
 
     @Override
     public String toString() {
-        return super.toString() + "\nBestScores: \n" + EvolutionCommunityBetter.bigListStringify(bestEvolutionScore) +
-                "\nBestFitness: \n" + EvolutionCommunityBetter.bigListStringify(bestEvolutionFitness);
+        return "Generation: " + generation + ", MutationRate: " + mutationRate + '\n' +
+        "HighScore: " + highScore + ", Achieved at Generation: " + highScoreGeneration + '\n' +
+        "Scores: \n" + EvolutionCommunity.bigListStringify(evolutionScore) + "\nFitness: \n" + EvolutionCommunity.bigListStringify(evolutionFitness);
+    }
+
+    public void iterate() {
+            while (!isDead()) {
+                tick();
+            }
+            naturalSelection();
+    }
+
+    public void multipleIterate(int n) {
+        for (int i = 0; i < n; i++) {
+            iterate();
+        }
     }
 }
