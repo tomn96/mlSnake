@@ -9,7 +9,7 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
     private static final int OUTPUT_NODES = 4;
     private static final int HIDDEN_LAYERS = 2;
 
-    private int lifeLeft = 0;  // don't worry - this is going to be 200 by 2 initial 'eat' calls in the constructor. amount of moves the snake can make before it dies
+    private int lifeLeft = 200;  // amount of moves the snake can make before it dies
     private int lifetime = 0;  // amount of time the snake has been alive
 
     private Brain brain;

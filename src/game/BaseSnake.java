@@ -22,8 +22,8 @@ public abstract class BaseSnake extends GameObject implements Alive {
         int y = math.Utils.marginRandom(this.board.getHeight());
         this.head = new BoardCoordinate(x, y);
 
-        this.eat();
-        this.eat();
+        this.eat(false);
+        this.eat(false);
     }
 
     public BoardCoordinate getHead() {
@@ -75,7 +75,7 @@ public abstract class BaseSnake extends GameObject implements Alive {
         }
     }
 
-    protected void eat() {
+    protected void eat(boolean createNewFood) {
         score++;
 
         if (body.size() >= 1) {
@@ -84,7 +84,13 @@ public abstract class BaseSnake extends GameObject implements Alive {
             body.add(new BoardCoordinate(head));
         }
 
-        board.generateFood(); // TODO - maybe after shiftBody?
+        if (createNewFood) {
+            board.generateFood(); // TODO - maybe after shiftBody?
+        }
+    }
+
+    protected void eat() {
+        this.eat(true);
     }
 
     protected abstract void move();
