@@ -9,7 +9,7 @@ public class HumanSnake extends BaseSnake implements KeyListener {
 
     public HumanSnake(Board board) {
         super(board);
-        velocity = new BoardCoordinate(0, 0);
+        velocity = new BoardCoordinate(1, 0);
     }
 
     @Override
@@ -36,17 +36,10 @@ public class HumanSnake extends BaseSnake implements KeyListener {
     }
 
     @Override
-    public void keyReleased(KeyEvent keyEvent) {
-//        velocity = new BoardCoordinate(0, 0);
-    }
+    public void keyReleased(KeyEvent keyEvent) {}
 
     @Override
     protected void move() {
-        if (dead) {
-            System.exit(1);
-        }
-        for (int i = 0; i < 10; i++) {
-            shiftBody(velocity);
-        }
+        shiftBody(velocity);
     }
 }

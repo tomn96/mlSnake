@@ -3,12 +3,23 @@ package game;
 import java.awt.*;
 
 public abstract class Game extends Canvas implements Runnable, Tickable, Renderable<Object> {
-    private Thread thread;
-    public volatile boolean running = false;
+    protected static final double DEFAULT_AMOUNT_OF_TICKS_PER_SEC = 60.0;
+
+    private Thread thread = null;
+    public boolean running = false;
+
+    double amountOfTicksPerSec;
+
+    public Game(double amountOfTicksPerSec) {
+        this.amountOfTicksPerSec = amountOfTicksPerSec;
+    }
+
+    public Game() {
+        this(Game.DEFAULT_AMOUNT_OF_TICKS_PER_SEC);
+    }
 
     @Override
     public void run() {
-        double amountOfTicksPerSec = 60.0;
         double ns = Math.pow(10, 9) / amountOfTicksPerSec;
         double delta = 0;
         int frames = 0;

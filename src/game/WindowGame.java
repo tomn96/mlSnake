@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 
 public class WindowGame extends Game {
@@ -10,9 +11,18 @@ public class WindowGame extends Game {
     private BaseSnake snake;
     private Window window;
 
-    public WindowGame(BaseSnake snake) {
+    public WindowGame(BaseSnake snake, double amountOfTicksPerSec) {
+        super(amountOfTicksPerSec);
         this.snake = snake;
         window = new Window(WindowGame.WIDTH, WindowGame.HEIGHT, "mlSnake", this);
+
+        if (this.snake instanceof KeyListener) {
+            this.addKeyListener((KeyListener) this.snake);
+        }
+    }
+
+    public WindowGame(BaseSnake snake) {
+        this(snake, WindowGame.DEFAULT_AMOUNT_OF_TICKS_PER_SEC);
     }
 
     @Override
