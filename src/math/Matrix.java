@@ -1,9 +1,10 @@
 package math;
 
+import java.io.Serializable;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 
-public class Matrix {
+public class Matrix implements Serializable {
     protected int rows, cols;
     protected float[][] m;
 

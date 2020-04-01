@@ -1,12 +1,13 @@
 package game;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class BaseBoard implements Renderable<Graphics> {
-    private Random random = new Random();
+public abstract class BaseBoard implements Renderable<Graphics>, Serializable {
+    private transient Random random = new Random();
 
     protected int width;
     protected int height;

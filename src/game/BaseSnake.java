@@ -2,10 +2,11 @@ package game;
 
 import evolution.Alive;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseSnake extends GameObject implements Alive {
+public abstract class BaseSnake implements Alive, Serializable {
 
     protected BaseBoard board;
     protected BoardCoordinate head;

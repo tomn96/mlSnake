@@ -3,7 +3,9 @@ package machinelearning;
 import math.Matrix;
 import math.MatrixException;
 
-public abstract class SimpleComputationalGraph {
+import java.io.Serializable;
+
+public abstract class SimpleComputationalGraph implements Serializable {
     protected int iNodes, hNodes, oNodes, hLayers;
     protected Matrix[] weights;
 
