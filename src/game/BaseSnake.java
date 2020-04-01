@@ -13,12 +13,17 @@ public abstract class BaseSnake extends GameObject implements Alive {
     protected List<BoardCoordinate> body = new ArrayList<>();
     protected boolean dead = false;
 
+    public int score = 1;
+
     public BaseSnake(Board board) {
         this.board = board;
         this.board.setSnake(this);
         int x = math.Utils.marginRandom(this.board.getWidth());
         int y = math.Utils.marginRandom(this.board.getHeight());
         this.head = new BoardCoordinate(x, y);
+
+        this.eat();
+        this.eat();
     }
 
     public BoardCoordinate getHead() {
@@ -71,6 +76,8 @@ public abstract class BaseSnake extends GameObject implements Alive {
     }
 
     protected void eat() {
+        score++;
+
         if (body.size() >= 1) {
             body.add(new BoardCoordinate(body.get(body.size() - 1)));
         } else {

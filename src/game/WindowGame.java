@@ -24,7 +24,7 @@ public class WindowGame extends Game {
 
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, 260, 600);
-        ((SimpleBoard)snake.getBoard()).render(g);
+        snake.getBoard().render(g);
 
         g.dispose();
         bs.show();

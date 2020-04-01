@@ -3,7 +3,7 @@ package game;
 import java.awt.*;
 import java.util.List;
 
-public class RenderBoard extends Board implements Renderable<Graphics> {
+public class RealLifeBoard extends Board {
     public static final int WIDTH = 640;
     public static final int HEIGHT = 480;
 
@@ -11,16 +11,16 @@ public class RenderBoard extends Board implements Renderable<Graphics> {
 
     private float e;
 
-    protected RenderBoard(BaseSnake snake, float epsilon) {
-        super(snake, RenderBoard.WIDTH, RenderBoard.HEIGHT);
+    protected RealLifeBoard(BaseSnake snake, float epsilon) {
+        super(snake, RealLifeBoard.WIDTH, RealLifeBoard.HEIGHT);
         e = Math.max(0, epsilon);
     }
 
-    public RenderBoard(BaseSnake snake) {
-        this(snake, RenderBoard.EPSILON);
+    public RealLifeBoard(BaseSnake snake) {
+        this(snake, RealLifeBoard.EPSILON);
     }
 
-    public RenderBoard() {
+    public RealLifeBoard() {
         this(null);
     }
 

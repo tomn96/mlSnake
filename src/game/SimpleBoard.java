@@ -36,7 +36,7 @@ public class SimpleBoard extends Board implements Renderable<Graphics> {
     @Override
     public void render(Graphics object) {
         object.setColor(Color.BLACK);
-        object.drawString("Score: " + ((SmartSnake) snake).getScore(), 100, 25);
+        object.drawString("Score: " + snake.score, 100, 25);
         String all = this.toString();
         String[] lines = all.split("\n");
         for (int i = 0; i < lines.length; i++) {
