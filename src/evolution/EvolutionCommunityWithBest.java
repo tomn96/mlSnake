@@ -5,8 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class EvolutionCommunityWithBest<T extends Community<T>> extends EvolutionCommunity<T> {
-
-    private List<Integer> bestEvolutionScore = new LinkedList<>();
     private List<Double> bestEvolutionFitness = new LinkedList<>();
 
     private float initialMutationRate;
@@ -14,15 +12,15 @@ public class EvolutionCommunityWithBest<T extends Community<T>> extends Evolutio
 
     private T bestFitnessSnake;
 
-    public EvolutionCommunityWithBest(int size, float mutationRate, T initial) {
-        super(size, mutationRate, initial);
+    public EvolutionCommunityWithBest(int size, float mutationRate, int legacy, T initial) {
+        super(size, mutationRate, legacy, initial);
 
         this.initialMutationRate = this.mutationRate;
         this.bestFitnessSnake = initial.copy();
     }
 
     public EvolutionCommunityWithBest(T initial) {
-        this(EvolutionCommunityWithBest.DEFAULT_SIZE, EvolutionCommunityWithBest.DEFAULT_MUTATION_RATE, initial);
+        this(EvolutionCommunityWithBest.DEFAULT_SIZE, EvolutionCommunityWithBest.DEFAULT_MUTATION_RATE, EvolutionCommunityWithBest.DEFAULT_LEGACY_AMOUNT, initial);
     }
 
     @Override
@@ -55,13 +53,10 @@ public class EvolutionCommunityWithBest<T extends Community<T>> extends Evolutio
 
     private void setBestFitnessSnake() {  // set the best snake of the generation
         double bestFitness = bestFitnessSnake.fitness();
-        int bestFitnessSnakeScore = bestFitnessSnake.getScore();
-
         double max = snakes.get(0).fitness();
         if (max > bestFitness) {
             bestFitnessSnake = snakes.get(0).copy();
             bestFitness = max;
-            bestFitnessSnakeScore = snakes.get(0).getScore();
             fixMutationRate(false);
         } else {
             bestFitnessSnake = bestFitnessSnake.copy();
@@ -69,7 +64,6 @@ public class EvolutionCommunityWithBest<T extends Community<T>> extends Evolutio
         }
 
         bestEvolutionFitness.add(bestFitness);
-        bestEvolutionScore.add(bestFitnessSnakeScore);
     }
 
     @Override
@@ -81,17 +75,16 @@ public class EvolutionCommunityWithBest<T extends Community<T>> extends Evolutio
 
     @Override
     public void naturalSelection() {
-        sortSnakesByFitness();
+        survival();
         setBestFitnessSnake();
 
         List<T> newSnakes = new ArrayList<>(snakes.size());
         newSnakes.add(bestFitnessSnake.duplicate());  // add the best snake of the prior generation into the new generation
-        naturalSelectionHelper(newSnakes, snakes.size() - 1);
+        reproduce(newSnakes, snakes.size() - 1);
     }
 
     @Override
     public String toString() {
-        return super.toString() + "\nBestScores: " + EvolutionCommunity.bigListStringify(bestEvolutionScore) +
-                "\nBestFitness: " + EvolutionCommunity.bigListStringify(bestEvolutionFitness);
+        return super.toString() + "\nBestFitness: " + EvolutionCommunityWithBest.bigListStringify(bestEvolutionFitness);
     }
 }

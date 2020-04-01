@@ -8,12 +8,14 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
     protected static final int DEFAULT_SIZE = 2000;
     protected static final float DEFAULT_MUTATION_RATE = 0.1f;
     protected static final float MAX_MUTATION_RATE = 0.35f;
+    protected static final int DEFAULT_LEGACY_AMOUNT = 20;
 
     private List<Integer> evolutionScore = new LinkedList<>();
     private List<Double> evolutionFitness = new LinkedList<>();
     protected int generation = 0;
 
     protected float mutationRate;
+    private int legacy;
 
     protected List<T> snakes;
 
@@ -23,8 +25,9 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
 
     private double tempFitnessSum = 0;
 
-    public EvolutionCommunity(int size, float mutationRate, T initial) {
+    public EvolutionCommunity(int size, float mutationRate, int legacy, T initial) {
         this.mutationRate = Math.min(mutationRate, EvolutionCommunity.MAX_MUTATION_RATE);
+        this.legacy = legacy;
 
         snakes = new ArrayList<>(size);
         snakes.add(initial.duplicate());
@@ -34,7 +37,7 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
     }
 
     public EvolutionCommunity(T initial) {
-        this(EvolutionCommunity.DEFAULT_SIZE, EvolutionCommunity.DEFAULT_MUTATION_RATE, initial);
+        this(EvolutionCommunity.DEFAULT_SIZE, EvolutionCommunity.DEFAULT_MUTATION_RATE, EvolutionCommunity.DEFAULT_LEGACY_AMOUNT, initial);
     }
 
     public int getHighScore() {
@@ -62,19 +65,6 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
                 snake.tick();
             }
         }
-    }
-
-    private T selectParent() {  // selects a random number in range of the fitnesssum and if a snake falls in that range then select it
-        Random random = new Random();
-        int rand = random.nextInt((int) Math.floor(fitnessSum()));
-        double summation = 0;
-        for (T snake : snakes) {
-            summation += snake.fitness();
-            if (summation > rand) {
-                return snake;
-            }
-        }
-        return snakes.get(0);
     }
 
     protected void validateAndSetHighScoreSnake(T snake) {
@@ -107,7 +97,7 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         evolutionFitness.add(snakes.get(0).fitness());
     }
 
-    protected void sortSnakesByFitness() {
+    protected void survival() {
         snakes.sort((t1, t2) -> (int) (t2.fitness() - t1.fitness()));
         setData();
     }
@@ -124,8 +114,20 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         return tempFitnessSum;
     }
 
-    protected void naturalSelectionHelper(List<T> newSnakes, int moreToAdd) {
-        int legacy = 20;
+    private T selectParent() {  // selects a random number in range of the fitnesssum and if a snake falls in that range then select it
+        Random random = new Random();
+        int rand = random.nextInt((int) Math.floor(fitnessSum()));
+        double summation = 0;
+        for (T snake : snakes) {
+            summation += snake.fitness();
+            if (summation > rand) {
+                return snake;
+            }
+        }
+        return snakes.get(0);
+    }
+
+    protected void reproduce(List<T> newSnakes, int moreToAdd) {
         int i = 0;
         for (; i < legacy && i < moreToAdd; i++) {
             newSnakes.add(snakes.get(i).duplicate());
@@ -141,27 +143,13 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         generation++;
     }
 
+    public void reproduce() {
+        reproduce(new ArrayList<>(snakes.size()), snakes.size());
+    }
+
     public void naturalSelection() {
-        sortSnakesByFitness();
-        naturalSelectionHelper(new ArrayList<>(snakes.size()), snakes.size());
-    }
-
-    protected static String bigListStringify(List<?> l) {
-        StringBuilder result = new StringBuilder();
-        int end = l.size();
-        int start = Math.max(0, end - 10);
-        if (start > 0) {
-            result.append("...");
-        }
-        result.append(l.subList(start, end).toString());
-        return result.toString();
-    }
-
-    @Override
-    public String toString() {
-        return "Generation: " + generation + ", MutationRate: " + mutationRate + '\n' +
-        "HighScore: " + highScore + ", Achieved at Generation: " + highScoreGeneration + '\n' +
-        "Scores: " + EvolutionCommunity.bigListStringify(evolutionScore) + "\nFitness: " + EvolutionCommunity.bigListStringify(evolutionFitness);
+        survival();
+        reproduce();
     }
 
     public void iterate() {
@@ -189,5 +177,23 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
 
     public void runIfMakeThis(int generation, int score) {
         runIfMakeThis(generation, score, false);
+    }
+
+    protected static String bigListStringify(List<?> l) {
+        StringBuilder result = new StringBuilder();
+        int end = l.size();
+        int start = Math.max(0, end - 10);
+        if (start > 0) {
+            result.append("...");
+        }
+        result.append(l.subList(start, end).toString());
+        return result.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Generation: " + generation + ", MutationRate: " + mutationRate + '\n' +
+                "HighScore: " + highScore + ", Achieved at Generation: " + highScoreGeneration + '\n' +
+                "Scores: " + EvolutionCommunity.bigListStringify(evolutionScore) + "\nFitness: " + EvolutionCommunity.bigListStringify(evolutionFitness);
     }
 }
