@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class BaseBoard implements Renderable<Graphics>, Serializable {
-    private transient Random random = new Random();
-
     protected int width;
     protected int height;
     protected BaseSnake snake;
@@ -22,6 +20,7 @@ public abstract class BaseBoard implements Renderable<Graphics>, Serializable {
         this.height = height;
         this.snake = snake;
         if (initiateFood) {
+            Random random = new Random();
             food = new BoardCoordinate(random.nextInt(this.width), random.nextInt(this.height));
             this.foodList = new ArrayList<>();
             this.foodList.add(this.food);
@@ -44,6 +43,7 @@ public abstract class BaseBoard implements Renderable<Graphics>, Serializable {
         if (foodList.size() > 0) {
             food = new BoardCoordinate(foodList.get(foodIndex));
         } else {
+            Random random = new Random();
             food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
             foodList = new ArrayList<>();
             foodList.add(food);
@@ -67,6 +67,7 @@ public abstract class BaseBoard implements Renderable<Graphics>, Serializable {
         if (foodIndex < foodList.size()) {
             food = new BoardCoordinate(foodList.get(foodIndex));
         } else {
+            Random random = new Random();
             food = new BoardCoordinate(random.nextInt(width), random.nextInt(height));
             if (snake != null) {
                 while (snakeFoundFood() || snake.bodyCollision(food)) {  // TODO - might be infinite

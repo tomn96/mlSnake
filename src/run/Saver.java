@@ -8,7 +8,9 @@ public class Saver {
 
     public static void main(String[] args) {
         SmartSnake snake = new SmartSnake();
-//        System.out.println(snake.brain);
+        while (!snake.isDead()) {
+            snake.tick();
+        }
         try {
             FileOutputStream fileOut = new FileOutputStream("/tmp/snakesaver/snake");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -18,7 +20,6 @@ public class Saver {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         SmartSnake s = null;
         try {
@@ -30,6 +31,6 @@ public class Saver {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        System.out.println(s.brain);
+        assert s != null;
     }
 }
