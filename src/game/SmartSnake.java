@@ -17,7 +17,7 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
 
     double tempFitness = 0;
 
-    public SmartSnake(Board board, Brain brain) {
+    public SmartSnake(BaseBoard board, Brain brain) {
         super(board);
         this.brain = new Brain(brain);
         initialHead = new BoardCoordinate(head);
@@ -40,7 +40,7 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
         return new SmartSnake();
     }
 
-    public SmartSnake same(Board b) {
+    public SmartSnake same(BaseBoard b) {
         SmartSnake result = new SmartSnake(b, this.brain);
         result.head = new BoardCoordinate(this.initialHead);
         result.initialHead = new BoardCoordinate(this.initialHead);
@@ -49,7 +49,7 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
 
     @Override
     public SmartSnake copy() {
-        Board b = SimpleBoard.copy((SimpleBoard) this.board);
+        BaseBoard b = SimpleBoard.copy((SimpleBoard) this.board);
         return same(b);
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 public abstract class BaseSnake extends GameObject implements Alive {
 
-    protected Board board;
+    protected BaseBoard board;
     protected BoardCoordinate head;
 
     protected List<BoardCoordinate> body = new ArrayList<>();
@@ -15,7 +15,7 @@ public abstract class BaseSnake extends GameObject implements Alive {
 
     protected int score = 1;
 
-    public BaseSnake(Board board) {
+    public BaseSnake(BaseBoard board) {
         this.board = board;
         this.board.setSnake(this);
         int x = math.Utils.marginRandom(this.board.getWidth());
@@ -30,7 +30,7 @@ public abstract class BaseSnake extends GameObject implements Alive {
         return head;
     }
 
-    public Board getBoard() {
+    public BaseBoard getBoard() {
         return board;
     }
 

@@ -9,7 +9,7 @@ public class VisionSnake extends BaseSnake {
     private List<BoardCoordinate> directions;
     BoardCoordinate decision;
 
-    public VisionSnake(Board board) {
+    public VisionSnake(BaseBoard board) {
         super(board);
         BoardCoordinate up = new BoardCoordinate(0, -1);
         BoardCoordinate down = new BoardCoordinate(0, 1);
