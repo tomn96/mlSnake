@@ -1,9 +1,10 @@
-package evolution;
+package run;
 
+import evolution.EvolutionCommunity;
+import evolution.EvolutionCommunityWithBest;
 import game.SmartSnake;
-import game.WindowGame;
 
-public class TestMain {
+public class TrainSmartSnake {
 
     public static void main(String[] args) {
         EvolutionCommunity<SmartSnake> ec = new EvolutionCommunityWithBest<>(new SmartSnake());
