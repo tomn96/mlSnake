@@ -16,8 +16,6 @@ public class EvolutionCommunityBetter<T extends Community<T>> implements Tickabl
     private int generation = 0;
 
     private float mutationRate;
-    private float initialMutationRate;
-    private int sameBest = 0;
 
     private List<T> snakes;
 
@@ -26,7 +24,6 @@ public class EvolutionCommunityBetter<T extends Community<T>> implements Tickabl
 
     public EvolutionCommunityBetter(int size, float mutationRate, T initial) {
         this.mutationRate = Math.min(mutationRate, EvolutionCommunityBetter.MAX_MUTATION_RATE);
-        this.initialMutationRate = this.mutationRate;
 
         snakes = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
@@ -87,12 +84,6 @@ public class EvolutionCommunityBetter<T extends Community<T>> implements Tickabl
             highScore = score;
             highScoreGeneration = generation;
         }
-
-//        if (evolutionFitness.size() == 1 || evolutionFitness.get(evolutionFitness.size() - 1) > evolutionFitness.get(evolutionFitness.size() - 2)) {
-//            WindowGame windowGame = new WindowGame(((SmartSnake) snakes.get(0)).copy());
-//            while (windowGame.running) {
-//            }
-//        }
     }
 
     public void naturalSelection() {
@@ -132,7 +123,7 @@ public class EvolutionCommunityBetter<T extends Community<T>> implements Tickabl
                 tick();
             }
             naturalSelection();
-            System.out.println("Generation: " + generation + ", Same Best: " + sameBest + ", MutationRate: " + mutationRate);
+            System.out.println("Generation: " + generation + ", MutationRate: " + mutationRate);
             System.out.println("HighScore: " + highScore + ", Achieved at Generation: " + highScoreGeneration);
             System.out.print("Scores: ");
             printHelper(evolutionScore);
