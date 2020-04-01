@@ -73,6 +73,13 @@ public class EvolutionCommunityWithBest<T extends Community<T>> extends Evolutio
     }
 
     @Override
+    protected int setHighScoreSnake() {
+        int maxScore = super.setHighScoreSnake();
+        validateAndSetHighScoreSnake(bestFitnessSnake);
+        return Math.max(maxScore, bestFitnessSnake.getScore());
+    }
+
+    @Override
     public void naturalSelection() {
         sortSnakesByFitness();
         setBestFitnessSnake();

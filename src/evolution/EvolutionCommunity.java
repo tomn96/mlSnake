@@ -11,15 +11,15 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
 
     private List<Integer> evolutionScore = new LinkedList<>();
     private List<Double> evolutionFitness = new LinkedList<>();
-    private int generation = 0;
+    protected int generation = 0;
 
     protected float mutationRate;
 
     protected List<T> snakes;
 
-    private T highScoreSnake = null;
-    private int highScore = 0;
-    private int highScoreGeneration = 0;
+    protected T highScoreSnake = null;
+    protected int highScore = 0;
+    protected int highScoreGeneration = 0;
 
     private double tempFitnessSum = 0;
 
@@ -77,16 +77,34 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         return snakes.get(0);
     }
 
-    private void setData() {
-        int score = snakes.get(0).getScore();
-        evolutionScore.add(score);
-        evolutionFitness.add(snakes.get(0).fitness());
-
-        if (score > highScore) {
-            highScore = score;
+    protected void validateAndSetHighScoreSnake(T snake) {
+        int maxScore = snake.getScore();
+        if (maxScore > highScore) {
+            highScore = maxScore;
             highScoreGeneration = generation;
-            highScoreSnake = snakes.get(0).copy();
+            highScoreSnake = snake.copy();
         }
+    }
+
+    protected int setHighScoreSnake() {
+        int maxScore = snakes.get(0).getScore();
+        int maxIdx = 0;
+        for (int i = 1; i < snakes.size(); i++) {
+            int iScore = snakes.get(i).getScore();
+            if (iScore > maxScore) {
+                maxScore = iScore;
+                maxIdx = i;
+            }
+        }
+
+        validateAndSetHighScoreSnake(snakes.get(maxIdx));
+        return maxScore;
+    }
+
+    private void setData() {
+        int maxScore = setHighScoreSnake();
+        evolutionScore.add(maxScore);
+        evolutionFitness.add(snakes.get(0).fitness());
     }
 
     protected void sortSnakesByFitness() {
