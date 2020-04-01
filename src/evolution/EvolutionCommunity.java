@@ -25,8 +25,6 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
     private List<T> snakes;
 
     private T bestFitnessSnake;
-    private double bestFitness;
-    private int bestFitnessSnakeScore;
 
     private T bestScoreSnake;
     private int highScore;
@@ -37,8 +35,6 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         this.initialMutationRate = this.mutationRate;
 
         this.bestFitnessSnake = initial.copy();
-        this.bestFitness = this.bestFitnessSnake.fitness();
-        this.bestFitnessSnakeScore = this.bestFitnessSnake.getScore();
 
         this.bestScoreSnake = initial.copy();
         this.highScore = this.bestScoreSnake.getScore();
@@ -77,6 +73,9 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
     }
 
     private void setBestFitnessSnake() {  // set the best snake of the generation
+        double bestFitness = bestFitnessSnake.fitness();
+        int bestFitnessSnakeScore = bestFitnessSnake.getScore();
+
         int maxIndex = 0;
         double max = snakes.get(0).fitness();
         for (int i = 1; i < snakes.size(); i++) {
