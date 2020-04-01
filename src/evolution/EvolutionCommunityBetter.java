@@ -4,10 +4,7 @@ import game.SmartSnake;
 import game.Tickable;
 import game.WindowGame;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class EvolutionCommunityBetter<T extends Community<T>> implements Tickable, Alive, Runnable {
     private static final int DEFAULT_SIZE = 2000;
@@ -24,24 +21,15 @@ public class EvolutionCommunityBetter<T extends Community<T>> implements Tickabl
 
     private List<T> snakes;
 
-    private T bestFitnessSnake;
-
-    private T bestScoreSnake;
-    private int highScore;
+    private int highScore = 0;
     private int highScoreGeneration = 0;
 
     public EvolutionCommunityBetter(int size, float mutationRate, T initial) {
         this.mutationRate = Math.min(mutationRate, EvolutionCommunityBetter.MAX_MUTATION_RATE);
         this.initialMutationRate = this.mutationRate;
 
-        this.bestFitnessSnake = initial.copy();
-
-        this.bestScoreSnake = initial.copy();
-        this.highScore = this.bestScoreSnake.getScore();
-
         snakes = new ArrayList<>(size);
-        snakes.add(initial.duplicate());
-        for (int i = 1; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             snakes.add(initial.newIndividual());
         }
     }
@@ -57,59 +45,16 @@ public class EvolutionCommunityBetter<T extends Community<T>> implements Tickabl
                 return false;
             }
         }
-        return bestFitnessSnake.isDead();
+        return true;
     }
 
     @Override
     public void tick() {  // update all the snakes in the generation
-        if (!bestFitnessSnake.isDead()) {  // if the best snake is not dead update it, this snake is a replay of the best from the past generation
-            bestFitnessSnake.tick();
-        }
         for (T snake : snakes) {
             if (!snake.isDead()) {
                 snake.tick();
             }
         }
-    }
-
-    private void setBestFitnessSnake() {  // set the best snake of the generation
-        double bestFitness = bestFitnessSnake.fitness();
-        int bestFitnessSnakeScore = bestFitnessSnake.getScore();
-
-        int maxIndex = 0;
-        double max = snakes.get(0).fitness();
-        for (int i = 1; i < snakes.size(); i++) {
-            double f = snakes.get(i).fitness();
-            if (f > max) {
-                max = f;
-                maxIndex = i;
-            }
-        }
-
-        if (max > bestFitness) {
-            bestFitnessSnake = snakes.get(maxIndex).copy();
-            bestFitness = max;
-            bestFitnessSnakeScore = snakes.get(maxIndex).getScore();
-
-            if (bestFitnessSnakeScore > highScore) {
-                bestScoreSnake = bestFitnessSnake.copy();
-                highScore = bestFitnessSnakeScore;
-                highScoreGeneration = generation;
-            }
-
-            sameBest = 0;
-            mutationRate = initialMutationRate;
-        } else {
-            bestFitnessSnake = bestFitnessSnake.copy();
-
-            sameBest++;
-            if (sameBest % 3  == 0) {
-                mutationRate = (float) Math.min(mutationRate + 0.025, EvolutionCommunityBetter.MAX_MUTATION_RATE);
-            }
-        }
-
-        evolutionFitness.add(bestFitness);
-        evolutionScore.add(bestFitnessSnakeScore);
     }
 
     private T selectParent() {  // selects a random number in range of the fitnesssum and if a snake falls in that range then select it
@@ -133,12 +78,35 @@ public class EvolutionCommunityBetter<T extends Community<T>> implements Tickabl
         return result;
     }
 
+    private void logData() {
+        int score = snakes.get(0).getScore();
+        evolutionScore.add(score);
+        evolutionFitness.add(snakes.get(0).fitness());
+
+        if (score > highScore) {
+            highScore = score;
+            highScoreGeneration = generation;
+        }
+
+//        if (evolutionFitness.size() == 1 || evolutionFitness.get(evolutionFitness.size() - 1) > evolutionFitness.get(evolutionFitness.size() - 2)) {
+//            WindowGame windowGame = new WindowGame(((SmartSnake) snakes.get(0)).copy());
+//            while (windowGame.running) {
+//            }
+//        }
+    }
+
     public void naturalSelection() {
-        setBestFitnessSnake();
+        snakes.sort((t1, t2) -> (int) (t2.fitness() - t1.fitness()));
+        logData();
 
         List<T> newSnakes = new ArrayList<>(snakes.size());
-        newSnakes.add(bestFitnessSnake.duplicate());  // add the best snake of the prior generation into the new generation
-        for(int i = 1; i < snakes.size(); i++) {
+
+        int legacy = 20;
+        int i = 0;
+        for (; i < legacy; i++) {
+            newSnakes.add(snakes.get(i).duplicate());
+        }
+        for(; i < snakes.size(); i++) {
             T child = selectParent().combine(selectParent());
             child.mutate(mutationRate);
             newSnakes.add(child);
@@ -170,11 +138,6 @@ public class EvolutionCommunityBetter<T extends Community<T>> implements Tickabl
             printHelper(evolutionScore);
             System.out.print("Fitness: ");
             printHelper(evolutionFitness);
-
-            if (sameBest == 0) {
-                WindowGame windowGame = new WindowGame(((SmartSnake) bestFitnessSnake).copy());
-                while (windowGame.running) {}
-            }
         }
     }
 }

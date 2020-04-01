@@ -15,6 +15,8 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
     private Brain brain;
     private BoardCoordinate initialHead;
 
+    double tempFitness = 0;
+
     public SmartSnake(Board board, Brain brain) {
         super(board);
         this.brain = new Brain(brain);
@@ -70,6 +72,8 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
         if (lifeLeft <= 0) {
             dead = true;
         }
+
+        calcFitness();
     }
 
     @Override
@@ -164,10 +168,14 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
         return score;
     }
 
-    @Override
-    public double fitness() {
+    private void calcFitness() {
         int a = Math.min(10, score);
         int b = Math.max(1, score - 9);
-        return Math.floor(lifetime * lifetime) * Math.pow(2, a) * b;
+        tempFitness =  Math.floor(lifetime * lifetime) * Math.pow(2, a) * b;
+    }
+
+    @Override
+    public double fitness() {
+        return tempFitness;
     }
 }
