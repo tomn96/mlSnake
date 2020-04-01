@@ -2,40 +2,23 @@ package run;
 
 import evolution.EvolutionCommunity;
 import evolution.EvolutionCommunityWithBest;
-import game.CmdGame;
-import game.Game;
 import game.SmartSnake;
-import game.WindowGame;
+
 
 public class TrainSmartSnake {
 
     public static void main(String[] args) {
-        EvolutionCommunityWithBest<SmartSnake> ec = new EvolutionCommunityWithBest<>(new SmartSnake());
-//        EvolutionCommunity<SmartSnake> ec = new EvolutionCommunity<>(new SmartSnake());
+        EvolutionCommunity<SmartSnake> ec1 = new EvolutionCommunityWithBest<>(new SmartSnake());
+        EvolutionCommunity<SmartSnake> ec2 = new EvolutionCommunity<>(new SmartSnake());
 
-        int highScore = 0;
+        int[][] conditions = {{30, 10}, {100, 50}, {200, 75}};
+
         while (true) {
-            ec.iterate();
-            System.out.println(ec);
-//            if (ec.getHighScore() > highScore) {
-//                highScore = ec.getHighScore();
-//                SmartSnake snake = ec.getHighScoreSnake();
-//                WindowGame windowGame = new WindowGame(snake);
-//                windowGame.start();
-//                while (windowGame.running);
-//            }
+            ec1.runIfMakeConditions(conditions, true);
+            ec1 = new EvolutionCommunityWithBest<>(new SmartSnake());
 
-            SmartSnake snake = ec.getBestFitnessSnake();
-            Game game = new CmdGame(snake);
-            game.join();
-//            while (windowGame.running);
-
-            System.out.println("abcdefg");
+            ec2.runIfMakeConditions(conditions, true);
+            ec2 = new EvolutionCommunity<>(new SmartSnake());
         }
-
-//        while (true) {
-//            ec.runIfMakeThis(30, 10, true);
-//            ec = new EvolutionCommunityWithBest<>(new SmartSnake());
-//        }
     }
 }

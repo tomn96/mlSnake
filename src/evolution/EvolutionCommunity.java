@@ -165,18 +165,32 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         }
     }
 
-    public void runIfMakeThis(int generation, int score, boolean print) {
-        while (this.generation < generation || this.highScore >= score) {
+    public void runIfMakeConditions(int[][] conditions, boolean print) {
+        int g, s;
+
+        boolean keep = true;
+        while (keep) {
             iterate();
+
             if (print) {
                 System.out.println(this);
                 System.out.println("");
             }
+
+            for (int[] condition : conditions) {
+                g = condition[0];
+                s = condition[1];
+                if (generation >= g && highScore < s) {
+                    keep = false;
+                    break;
+                }
+            }
         }
     }
 
-    public void runIfMakeThis(int generation, int score) {
-        runIfMakeThis(generation, score, false);
+    public void runIfMakeThis(int generation, int score, boolean print) {
+        int[][] conditions = {{generation, score}};
+        runIfMakeConditions(conditions, print);
     }
 
     protected static String bigListStringify(List<?> l) {
