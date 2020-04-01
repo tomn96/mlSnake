@@ -3,7 +3,6 @@ package evolution;
 import game.SmartSnake;
 import game.WindowGame;
 import game.Tickable;
-//import math.Chart;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,31 +19,39 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
     private int generation = 0;
 
     private float mutationRate;
+    private float initialMutationRate;
+    private int sameBest = 0;
 
     private List<T> snakes;
-    private T bestSnake;
 
-    private double bestFitness = 0;
-    private int bestSnakeScore = 0;
+    private T bestFitnessSnake;
+    private double bestFitness;
+    private int bestFitnessSnakeScore;
 
-    private int sameBest = 0;
-    private float initialMutationRate;
+    private T bestScoreSnake;
+    private int highScore;
+    private int highScoreGeneration = 0;
 
-    private T best;
-    private int highScore = 0;
-
-    public EvolutionCommunity(int size, float mutationRate, T sample) {
+    public EvolutionCommunity(int size, float mutationRate, T initial) {
         this.mutationRate = Math.min(mutationRate, EvolutionCommunity.MAX_MUTATION_RATE);
         this.initialMutationRate = this.mutationRate;
+
+        this.bestFitnessSnake = initial.copy();
+        this.bestFitness = this.bestFitnessSnake.fitness();
+        this.bestFitnessSnakeScore = this.bestFitnessSnake.getScore();
+
+        this.bestScoreSnake = initial.copy();
+        this.highScore = this.bestScoreSnake.getScore();
+
         snakes = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            snakes.add(sample.newIndividual());
+        snakes.add(initial.duplicate());
+        for (int i = 1; i < size; i++) {
+            snakes.add(initial.newIndividual());
         }
-        bestSnake = snakes.get(0).copy();
     }
 
-    public EvolutionCommunity(T sample) {
-        this(EvolutionCommunity.DEFAULT_SIZE, EvolutionCommunity.DEFAULT_MUTATION_RATE, sample);
+    public EvolutionCommunity(T initial) {
+        this(EvolutionCommunity.DEFAULT_SIZE, EvolutionCommunity.DEFAULT_MUTATION_RATE, initial);
     }
 
     @Override
@@ -54,13 +61,13 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
                 return false;
             }
         }
-        return bestSnake.isDead();
+        return bestFitnessSnake.isDead();
     }
 
     @Override
     public void tick() {  // update all the snakes in the generation
-        if (!bestSnake.isDead()) {  // if the best snake is not dead update it, this snake is a replay of the best from the past generation
-            bestSnake.tick();
+        if (!bestFitnessSnake.isDead()) {  // if the best snake is not dead update it, this snake is a replay of the best from the past generation
+            bestFitnessSnake.tick();
         }
         for (T snake : snakes) {
             if (!snake.isDead()) {
@@ -69,10 +76,10 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         }
     }
 
-    private void setBestSnake() {  // set the best snake of the generation
-        double max = 0;
+    private void setBestFitnessSnake() {  // set the best snake of the generation
         int maxIndex = 0;
-        for (int i = 0; i < snakes.size(); i++) {
+        double max = snakes.get(0).fitness();
+        for (int i = 1; i < snakes.size(); i++) {
             double f = snakes.get(i).fitness();
             if (f > max) {
                 max = f;
@@ -81,21 +88,29 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         }
 
         if (max > bestFitness) {
-            bestSnake = snakes.get(maxIndex).copy();
+            bestFitnessSnake = snakes.get(maxIndex).copy();
             bestFitness = max;
-            bestSnakeScore = snakes.get(maxIndex).getScore();
+            bestFitnessSnakeScore = snakes.get(maxIndex).getScore();
+
+            if (bestFitnessSnakeScore > highScore) {
+                bestScoreSnake = bestFitnessSnake.copy();
+                highScore = bestFitnessSnakeScore;
+                highScoreGeneration = generation;
+            }
 
             sameBest = 0;
             mutationRate = initialMutationRate;
         } else {
-            bestSnake = bestSnake.copy();
+            bestFitnessSnake = bestFitnessSnake.copy();
 
             sameBest++;
-            if (sameBest > 3) {
+            if (sameBest % 3  == 0) {
                 mutationRate = (float) Math.min(mutationRate + 0.025, EvolutionCommunity.MAX_MUTATION_RATE);
-                sameBest = 0;
             }
         }
+
+        evolutionFitness.add(bestFitness);
+        evolutionScore.add(bestFitnessSnakeScore);
     }
 
     private T selectParent() {  // selects a random number in range of the fitnesssum and if a snake falls in that range then select it
@@ -119,21 +134,11 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         return result;
     }
 
-//    public void plot() {
-//        Chart demo = new Chart("XY Evolution");
-//        for (int i = 0; i < snakes.size(); i++) {
-//            demo.insert(i, snakes.get(i).fitness());
-//        }
-//        demo.plot();
-//    }
-
     public void naturalSelection() {
-        setBestSnake();
-
-//        plot();
+        setBestFitnessSnake();
 
         List<T> newSnakes = new ArrayList<>(snakes.size());
-        newSnakes.add(bestSnake.copy());  // add the best snake of the prior generation into the new generation
+        newSnakes.add(bestFitnessSnake.duplicate());  // add the best snake of the prior generation into the new generation
         for(int i = 1; i < snakes.size(); i++) {
             T child = selectParent().combine(selectParent());
             child.mutate(mutationRate);
@@ -141,12 +146,6 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         }
         snakes = newSnakes;
 
-        if (bestSnakeScore > highScore) {
-            best = bestSnake.copy();
-            highScore = bestSnakeScore;
-        }
-        evolutionScore.add(bestSnakeScore);
-        evolutionFitness.add(bestFitness);
         generation++;
     }
 
@@ -166,15 +165,16 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
                 tick();
             }
             naturalSelection();
-            System.out.println("Generation: " + generation + ", HighScore: " + highScore + ", MutationRate: " + mutationRate);
+            System.out.println("Generation: " + generation + ", Same Best: " + sameBest + ", MutationRate: " + mutationRate);
+            System.out.println("HighScore: " + highScore + ", Achieved at Generation: " + highScoreGeneration);
             System.out.print("Scores: ");
             printHelper(evolutionScore);
             System.out.print("Fitness: ");
             printHelper(evolutionFitness);
 
-            WindowGame windowGame = new WindowGame(((SmartSnake) bestSnake).copy());
-            while (windowGame.running) {
-
+            if (sameBest == 0) {
+                WindowGame windowGame = new WindowGame(((SmartSnake) bestFitnessSnake).copy());
+                while (windowGame.running) {}
             }
         }
     }

@@ -6,5 +6,6 @@ public interface Community<T> extends Alive, Tickable, Combinable<T>, Mutable {
     double fitness();
     int getScore();
     T copy();
+    T duplicate();
     T newIndividual();
 }

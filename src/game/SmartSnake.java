@@ -24,13 +24,13 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
 //    public SmartSnake(Board board) {
 //        this(board, new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
 //    }
-
-    public SmartSnake(Brain brain) {
-        this(new SimpleBoard(), brain);
-    }
+//
+//    public SmartSnake(Brain brain) {
+//        this(new SimpleBoard(), brain);
+//    }
 
     public SmartSnake() {
-        this(new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
+        this(new SimpleBoard(), new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
     }
 
     @Override
@@ -38,7 +38,7 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
         return new SmartSnake();
     }
 
-    public SmartSnake copy(Board b) {
+    public SmartSnake same(Board b) {
         SmartSnake result = new SmartSnake(b, this.brain);
         result.head = new BoardCoordinate(this.initialHead);
         result.initialHead = new BoardCoordinate(this.initialHead);
@@ -48,11 +48,12 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
     @Override
     public SmartSnake copy() {
         Board b = SimpleBoard.copy((SimpleBoard) this.board);
-        return copy(b);
+        return same(b);
     }
 
-    public SmartSnake copyNewBoard() {
-        return copy(new SimpleBoard());
+    @Override
+    public SmartSnake duplicate() {
+        return same(new SimpleBoard());
     }
 
     @Override
