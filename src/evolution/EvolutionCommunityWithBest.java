@@ -23,6 +23,10 @@ public class EvolutionCommunityWithBest<T extends Community<T>> extends Evolutio
         this(EvolutionCommunityWithBest.DEFAULT_SIZE, EvolutionCommunityWithBest.DEFAULT_MUTATION_RATE, EvolutionCommunityWithBest.DEFAULT_LEGACY_AMOUNT, initial);
     }
 
+    public T getBestFitnessSnake() {
+        return bestFitnessSnake.copy();
+    }
+
     @Override
     public boolean isDead() {  // check if all the snakes in the population are dead
         if (!bestFitnessSnake.isDead()) {

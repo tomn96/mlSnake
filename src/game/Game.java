@@ -4,7 +4,7 @@ import java.awt.*;
 
 public abstract class Game extends Canvas implements Runnable, Tickable, Renderable<Object> {
     private Thread thread;
-    public boolean running = false;
+    public volatile boolean running = false;
 
     @Override
     public void run() {
@@ -14,14 +14,15 @@ public abstract class Game extends Canvas implements Runnable, Tickable, Rendera
         int frames = 0;
         long timer = System.currentTimeMillis();
         long lastTime = System.nanoTime();
-        render(null);
+        if (running) {
+            render(null);
+        }
         while (running) {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
             lastTime = now;
             while (delta >= 1){
                 tick();
-//                render(null);
                 delta--;
             }
             if (running) {
@@ -35,7 +36,7 @@ public abstract class Game extends Canvas implements Runnable, Tickable, Rendera
                 frames = 0;
             }
         }
-//        stop();
+        stop();
     }
 
     public synchronized void start() {
@@ -51,5 +52,11 @@ public abstract class Game extends Canvas implements Runnable, Tickable, Rendera
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    public void join() {
+        while (running) {
+            Thread.onSpinWait();
+        }
     }
 }
