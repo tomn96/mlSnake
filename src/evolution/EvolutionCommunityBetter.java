@@ -1,38 +1,44 @@
 package evolution;
 
-import game.SmartSnake;
 import game.Tickable;
-import game.WindowGame;
 
 import java.util.*;
 
-public class EvolutionCommunityBetter<T extends Community<T>> implements Tickable, Alive, Runnable {
-    private static final int DEFAULT_SIZE = 2000;
-    private static final float DEFAULT_MUTATION_RATE = 0.1f;
-    private static final float MAX_MUTATION_RATE = 0.35f;
+public class EvolutionCommunityBetter<T extends Community<T>> implements Tickable, Alive {
+    protected static final int DEFAULT_SIZE = 2000;
+    protected static final float DEFAULT_MUTATION_RATE = 0.1f;
+    protected static final float MAX_MUTATION_RATE = 0.35f;
 
     private List<Integer> evolutionScore = new LinkedList<>();
     private List<Double> evolutionFitness = new LinkedList<>();
     private int generation = 0;
 
-    private float mutationRate;
+    protected float mutationRate;
 
-    private List<T> snakes;
+    protected List<T> snakes;
 
+    private T highScoreSnake = null;
     private int highScore = 0;
     private int highScoreGeneration = 0;
+
+    private double tempFitnessSum = 0;
 
     public EvolutionCommunityBetter(int size, float mutationRate, T initial) {
         this.mutationRate = Math.min(mutationRate, EvolutionCommunityBetter.MAX_MUTATION_RATE);
 
         snakes = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
+        snakes.add(initial.duplicate());
+        for (int i = 1; i < size; i++) {
             snakes.add(initial.newIndividual());
         }
     }
 
     public EvolutionCommunityBetter(T initial) {
         this(EvolutionCommunityBetter.DEFAULT_SIZE, EvolutionCommunityBetter.DEFAULT_MUTATION_RATE, initial);
+    }
+
+    public T getHighScoreSnake() {
+        return highScoreSnake;
     }
 
     @Override
@@ -67,15 +73,7 @@ public class EvolutionCommunityBetter<T extends Community<T>> implements Tickabl
         return snakes.get(0);
     }
 
-    private double fitnessSum() {  // calculate the sum of all the snakes fitnesses
-        double result = 0;
-        for (T snake : snakes) {
-            result += snake.fitness();
-        }
-        return result;
-    }
-
-    private void logData() {
+    private void setData() {
         int score = snakes.get(0).getScore();
         evolutionScore.add(score);
         evolutionFitness.add(snakes.get(0).fitness());
@@ -83,21 +81,35 @@ public class EvolutionCommunityBetter<T extends Community<T>> implements Tickabl
         if (score > highScore) {
             highScore = score;
             highScoreGeneration = generation;
+            highScoreSnake = snakes.get(0).copy();
         }
     }
 
-    public void naturalSelection() {
+    protected void sortSnakesByFitness() {
         snakes.sort((t1, t2) -> (int) (t2.fitness() - t1.fitness()));
-        logData();
+        setData();
+    }
 
-        List<T> newSnakes = new ArrayList<>(snakes.size());
+    private void calcFitnessSum() {  // calculate the sum of all the snakes fitnesses
+        double result = 0;
+        for (T snake : snakes) {
+            result += snake.fitness();
+        }
+        tempFitnessSum = result;
+    }
 
+    private double fitnessSum() {
+        return tempFitnessSum;
+    }
+
+    protected void naturalSelectionHelper(List<T> newSnakes, int moreToAdd) {
         int legacy = 20;
         int i = 0;
-        for (; i < legacy; i++) {
+        for (; i < legacy && i < moreToAdd; i++) {
             newSnakes.add(snakes.get(i).duplicate());
         }
-        for(; i < snakes.size(); i++) {
+        calcFitnessSum();
+        for(; i < moreToAdd; i++) {
             T child = selectParent().combine(selectParent());
             child.mutate(mutationRate);
             newSnakes.add(child);
@@ -107,28 +119,39 @@ public class EvolutionCommunityBetter<T extends Community<T>> implements Tickabl
         generation++;
     }
 
-    private void printHelper(List<?> l) {
+    public void naturalSelection() {
+        sortSnakesByFitness();
+        naturalSelectionHelper(new ArrayList<>(snakes.size()), snakes.size());
+    }
+
+    protected static String bigListStringify(List<?> l) {
+        StringBuilder result = new StringBuilder();
         int end = l.size();
         int start = Math.max(0, end - 10);
         if (start > 0) {
-            System.out.print("...");
+            result.append("...");
         }
-        System.out.println(l.subList(start, end));
+        result.append(l.subList(start, end).toString());
+        return result.toString();
     }
 
     @Override
-    public void run() {
-        while (true) {
+    public String toString() {
+        return "Generation: " + generation + ", MutationRate: " + mutationRate + '\n' +
+        "HighScore: " + highScore + ", Achieved at Generation: " + highScoreGeneration + '\n' +
+        "Scores: \n" + EvolutionCommunityBetter.bigListStringify(evolutionScore) + "\nFitness: \n" + EvolutionCommunityBetter.bigListStringify(evolutionFitness);
+    }
+
+    public void iterate() {
             while (!isDead()) {
                 tick();
             }
             naturalSelection();
-            System.out.println("Generation: " + generation + ", MutationRate: " + mutationRate);
-            System.out.println("HighScore: " + highScore + ", Achieved at Generation: " + highScoreGeneration);
-            System.out.print("Scores: ");
-            printHelper(evolutionScore);
-            System.out.print("Fitness: ");
-            printHelper(evolutionFitness);
+    }
+
+    public void multipleIterate(int n) {
+        for (int i = 0; i < n; i++) {
+            iterate();
         }
     }
 }
