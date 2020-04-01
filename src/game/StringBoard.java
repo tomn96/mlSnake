@@ -3,19 +3,19 @@ package game;
 import java.awt.*;
 import java.util.List;
 
-public class SimpleBoard extends BaseBoard implements Renderable<Graphics> {
+public class StringBoard extends BaseBoard implements Renderable<Graphics> {
     public static final int WIDTH = 38;
     public static final int HEIGHT = 38;
 
-    public SimpleBoard(BaseSnake snake) {
-        super(snake, SimpleBoard.WIDTH, SimpleBoard.HEIGHT);
+    public StringBoard(BaseSnake snake) {
+        super(snake, StringBoard.WIDTH, StringBoard.HEIGHT);
     }
 
-    public SimpleBoard() {
+    public StringBoard() {
         this(null);
     }
 
-    protected SimpleBoard(BaseSnake snake, int width, int height, List<BoardCoordinate> foods) {
+    protected StringBoard(BaseSnake snake, int width, int height, List<BoardCoordinate> foods) {
         super(snake, width, height, foods);
     }
 
@@ -29,8 +29,8 @@ public class SimpleBoard extends BaseBoard implements Renderable<Graphics> {
         return boardCoordinate.x < 0 || boardCoordinate.x >= width || boardCoordinate.y < 0 || boardCoordinate.y >= height;
     }
 
-    public static SimpleBoard copy(SimpleBoard board) {
-        return new SimpleBoard(null, board.width, board.height, board.foodList);
+    public static StringBoard copy(StringBoard board) {
+        return new StringBoard(null, board.width, board.height, board.foodList);
     }
 
     @Override
