@@ -2,6 +2,8 @@ package run;
 
 import evolution.EvolutionCommunity;
 import evolution.EvolutionCommunityWithBest;
+import game.CmdGame;
+import game.Game;
 import game.SmartSnake;
 import game.WindowGame;
 
@@ -24,8 +26,8 @@ public class TrainSmartSnake {
 //            }
 
             SmartSnake snake = ec.getBestFitnessSnake();
-            WindowGame windowGame = new WindowGame(snake);
-            windowGame.join();
+            Game game = new CmdGame(snake);
+            game.join();
 //            while (windowGame.running);
 
             System.out.println("abcdefg");

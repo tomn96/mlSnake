@@ -163,11 +163,6 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
         brain.mutate(rate);
     }
 
-    @Override
-    public int getScore() {
-        return score;
-    }
-
     private void calcFitness() {
         int a = Math.min(10, score);
         int b = Math.max(1, score - 9);

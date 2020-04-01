@@ -13,7 +13,7 @@ public abstract class BaseSnake extends GameObject implements Alive {
     protected List<BoardCoordinate> body = new ArrayList<>();
     protected boolean dead = false;
 
-    public int score = 1;
+    protected int score = 1;
 
     public BaseSnake(Board board) {
         this.board = board;
@@ -32,6 +32,10 @@ public abstract class BaseSnake extends GameObject implements Alive {
 
     public Board getBoard() {
         return board;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     @Override
