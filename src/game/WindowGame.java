@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 
-public class WindowGame extends Game {
+public class WindowGame extends BaseGame {
     public static final int WIDTH = 260;
     public static final int HEIGHT = 600;
 

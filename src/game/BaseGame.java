@@ -2,7 +2,8 @@ package game;
 
 import java.awt.*;
 
-public abstract class Game extends Canvas implements Runnable, Tickable, Renderable<Object> {
+public abstract class
+BaseGame extends Canvas implements Runnable, Tickable, Renderable<Object> {
     protected static final double DEFAULT_AMOUNT_OF_TICKS_PER_SEC = 60.0;
 
     private Thread thread = null;
@@ -10,12 +11,12 @@ public abstract class Game extends Canvas implements Runnable, Tickable, Rendera
 
     double amountOfTicksPerSec;
 
-    public Game(double amountOfTicksPerSec) {
+    public BaseGame(double amountOfTicksPerSec) {
         this.amountOfTicksPerSec = amountOfTicksPerSec;
     }
 
-    public Game() {
-        this(Game.DEFAULT_AMOUNT_OF_TICKS_PER_SEC);
+    public BaseGame() {
+        this(BaseGame.DEFAULT_AMOUNT_OF_TICKS_PER_SEC);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package game;
 
-public class CmdGame extends Game {
+public class CmdGame extends BaseGame {
     BaseSnake snake;
 
     public CmdGame(BaseSnake snake) {
