@@ -35,7 +35,7 @@ public abstract class Game extends Canvas implements Runnable, Tickable, Rendera
                 frames = 0;
             }
         }
-        stop();
+//        stop();
     }
 
     public synchronized void start() {
@@ -46,10 +46,10 @@ public abstract class Game extends Canvas implements Runnable, Tickable, Rendera
 
     public void stop() {
         running = false;
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            thread.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 }

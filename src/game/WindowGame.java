@@ -36,7 +36,7 @@ public class WindowGame extends Game {
         if (!snake.isDead()) {
             snake.tick();
         } else {
-            snake = new SmartSnake();
+            stop();
         }
     }
 
