@@ -7,8 +7,8 @@ public class WindowGame extends Game {
     SmartSnake snake;
     Window window;
 
-    public WindowGame() {
-        snake = new SmartSnake();
+    public WindowGame(SmartSnake snake) {
+        this.snake = snake;
         window = new Window(260, 600, "Snake", this);
 //        this.addKeyListener(snake);
     }
@@ -47,6 +47,6 @@ public class WindowGame extends Game {
     }
 
     public static void main(String[] args) {
-        WindowGame g = new WindowGame();
+        WindowGame g = new WindowGame(new SmartSnake());
     }
 }

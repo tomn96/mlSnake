@@ -4,11 +4,11 @@ import java.awt.*;
 
 public abstract class Game extends Canvas implements Runnable, Tickable, Renderable<Object> {
     private Thread thread;
-    private boolean running = false;
+    public boolean running = false;
 
     @Override
     public void run() {
-        double amountOfTicksPerSec = 10.0;
+        double amountOfTicksPerSec = 20.0;
         double ns = Math.pow(10, 9) / amountOfTicksPerSec;
         double delta = 0;
         int frames = 0;

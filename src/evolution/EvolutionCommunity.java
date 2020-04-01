@@ -1,5 +1,7 @@
 package evolution;
 
+import game.SmartSnake;
+import game.WindowGame;
 import game.Tickable;
 //import math.Chart;
 
@@ -89,7 +91,7 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
             bestSnake = bestSnake.copy();
 
             sameBest++;
-            if (sameBest > 7) {
+            if (sameBest > 3) {
                 mutationRate = (float) Math.min(mutationRate + 0.025, EvolutionCommunity.MAX_MUTATION_RATE);
                 sameBest = 0;
             }
@@ -169,6 +171,11 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
             printHelper(evolutionScore);
             System.out.print("Fitness: ");
             printHelper(evolutionFitness);
+
+            WindowGame windowGame = new WindowGame(((SmartSnake) bestSnake).copy());
+            while (windowGame.running) {
+
+            }
         }
     }
 }
