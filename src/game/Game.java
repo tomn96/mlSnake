@@ -45,11 +45,11 @@ public abstract class Game extends Canvas implements Runnable, Tickable, Rendera
     }
 
     public void stop() {
+        running = false;
         try {
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        running = false;
     }
 }

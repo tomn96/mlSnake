@@ -5,10 +5,11 @@ import java.awt.image.BufferStrategy;
 
 public class WindowGame extends Game {
     SmartSnake snake;
+    Window window;
 
     public WindowGame() {
         snake = new SmartSnake();
-        new Window(260, 600, "Snake", this);
+        window = new Window(260, 600, "Snake", this);
 //        this.addKeyListener(snake);
     }
 
@@ -37,6 +38,12 @@ public class WindowGame extends Game {
         } else {
             snake = new SmartSnake();
         }
+    }
+
+    @Override
+    public void stop() {
+        window.close();
+        super.stop();
     }
 
     public static void main(String[] args) {
