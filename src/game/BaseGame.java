@@ -22,13 +22,10 @@ BaseGame extends Canvas implements Runnable, Tickable, Renderable<Object> {
     @Override
     public void run() {
         double ns = Math.pow(10, 9) / amountOfTicksPerSec;
-        double ns2 = Math.pow(10, 9) / 30;
         double delta = 0;
-        double delta2 = 0;
         int frames = 0;
         long timer = System.currentTimeMillis();
         long lastTime = System.nanoTime();
-        long lastTime2 = System.nanoTime();
         if (running) {
             render(null);
         }
@@ -40,23 +37,16 @@ BaseGame extends Canvas implements Runnable, Tickable, Renderable<Object> {
                 tick();
                 delta--;
             }
-
-            long now2 = System.nanoTime();
-            delta2 += (now2 - lastTime2) / ns2;
-            lastTime2 = now2;
-            while (delta2 >= 1){
-                if (running) {
-                    render(null);
-                }
-                delta2--;
+            if (running) {
+                render(null);
             }
 
-//            frames++;
-//            if (System.currentTimeMillis() - timer > 1000) {
-//                timer += 1000;
-//                System.out.println("FPS: " + frames);
-//                frames = 0;
-//            }
+            frames++;
+            if (System.currentTimeMillis() - timer > 1000) {
+                timer += 1000;
+                System.out.println("FPS: " + frames);
+                frames = 0;
+            }
         }
         stop();
     }

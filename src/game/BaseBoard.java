@@ -12,11 +12,6 @@ public abstract class BaseBoard implements Renderable<Graphics>, Serializable {
     protected BaseSnake snake;
     protected BoardCoordinate food;
 
-    private BoardCoordinate renderSnakeHead;
-    private List<BoardCoordinate> renderSnakeCoordinates;
-    private int lastSnakeBodySize;
-    private BoardCoordinate lastSnakeHead;
-
     protected List<BoardCoordinate> foodList;  // list of food positions (used to replay the best snake)
     private int foodIndex = 0;  // iterator to run through the foodlist (used for replay)
 
@@ -131,72 +126,6 @@ public abstract class BaseBoard implements Renderable<Graphics>, Serializable {
             result.insert((i * width) + i - 1, "\n");
         }
         return result.toString();
-    }
-
-    public void helper(Graphics object) {
-        if (snake == null) {
-            return;
-        }
-
-        float parts = 30;
-
-        if (renderSnakeCoordinates == null) {
-            renderSnakeCoordinates = new ArrayList<>();
-            renderSnakeHead = new BoardCoordinate(snake.getHead());
-            renderSnakeCoordinates.add(new BoardCoordinate(snake.getHead().x + (1 / parts), snake.getHead().y + (1 / parts)));
-            for (int i = 2; i < parts; i++) {
-                renderSnakeCoordinates.add(new BoardCoordinate(snake.getHead().x + (i / parts), snake.getHead().y + (i / parts)));
-            }
-            lastSnakeBodySize = 0;
-            lastSnakeHead = snake.getHead();
-        }
-
-        if (lastSnakeBodySize != snake.body.size()) {
-            for (int i = 0; i < snake.body.size() - lastSnakeBodySize; i++) {
-                for (int j = 0; j < parts; j++) {
-                    renderSnakeCoordinates.add(new BoardCoordinate(renderSnakeCoordinates.get(renderSnakeCoordinates.size() - 1)));
-                }
-            }
-            lastSnakeBodySize = snake.body.size();
-        }
-
-        if (BoardCoordinate.distance(renderSnakeHead, lastSnakeHead) > 1 / parts) {
-            BoardCoordinate direction;
-            float x = lastSnakeHead.x - renderSnakeHead.x;
-            float y = lastSnakeHead.y - renderSnakeHead.y;
-            if (Math.abs(x) > Math.abs(y)) {
-                direction = new BoardCoordinate(Math.signum(x) / parts, 0);
-            } else {
-                direction = new BoardCoordinate(0, Math.signum(y) / parts);
-            }
-
-            BoardCoordinate temp1 = new BoardCoordinate(renderSnakeHead);
-            renderSnakeHead.add(direction);
-
-            BoardCoordinate temp2;
-            for (int i = 0; i < renderSnakeCoordinates.size(); i++) {
-                temp2 = new BoardCoordinate(renderSnakeCoordinates.get(i));
-                renderSnakeCoordinates.set(i, temp1);
-                temp1 = new BoardCoordinate(temp2);
-            }
-        } else {
-            lastSnakeHead = snake.getHead();
-        }
-
-        object.setColor(Color.GREEN);
-        object.fillRect((int)(renderSnakeHead.x * 20), (int)(renderSnakeHead.y * 20), 20, 20);
-        for (BoardCoordinate coordinate : renderSnakeCoordinates) {
-            object.fillRect((int)(coordinate.x * 20), (int)(coordinate.y * 20), 20, 20);
-        }
-    }
-
-
-    @Override
-    public void render(Graphics object) {
-        object.setColor(Color.RED);
-        object.fillRect((int)food.x * 20, (int)food.y * 20, 20, 20);
-
-        helper(object);
     }
 
 }

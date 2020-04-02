@@ -32,4 +32,15 @@ public class StringBoard extends BaseBoard implements Renderable<Graphics> {
     public static StringBoard copy(StringBoard board) {
         return new StringBoard(null, board.width, board.height, board.foodList);
     }
+
+    @Override
+    public void render(Graphics object) {
+        object.setColor(Color.BLACK);
+        object.drawString("Score: " + snake.getScore(), 100, 25);
+        String all = this.toString();
+        String[] lines = all.split("\n");
+        for (int i = 0; i < lines.length; i++) {
+            object.drawString(lines[i], 50, 50 + (i*10));
+        }
+    }
 }
