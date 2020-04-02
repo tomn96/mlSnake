@@ -35,12 +35,12 @@ public class StringBoard extends BaseBoard implements Renderable<Graphics> {
 
     @Override
     public void render(Graphics object) {
-        object.setColor(Color.BLACK);
-        object.drawString("Score: " + snake.getScore(), 100, 25);
-        String all = this.toString();
-        String[] lines = all.split("\n");
-        for (int i = 0; i < lines.length; i++) {
-            object.drawString(lines[i], 50, 50 + (i*10));
+        object.setColor(Color.RED);
+        object.fillRect((int)food.x * 5, (int)food.y * 5, 5, 5);
+
+        object.setColor(Color.GREEN);
+        for (BoardCoordinate coordinate : snake.getCoordinates()) {
+            object.fillRect((int)(coordinate.x * 5), (int)(coordinate.y * 5), 5, 5);
         }
     }
 }

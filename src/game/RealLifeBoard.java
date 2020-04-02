@@ -3,7 +3,7 @@ package game;
 import java.awt.*;
 import java.util.List;
 
-public class RealLifeBoard extends BaseBoard {
+public class RealLifeBoard extends BaseBoard {  // TODO
     public static final int WIDTH = 640;
     public static final int HEIGHT = 480;
 
@@ -35,7 +35,7 @@ public class RealLifeBoard extends BaseBoard {
     }
 
     @Override
-    public void render(Graphics object) {
+    public void render(Graphics object) {  // TODO
         object.setColor(Color.RED);
         object.fillRect((int)food.x, (int)food.y, 10, 10);
 
