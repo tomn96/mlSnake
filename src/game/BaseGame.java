@@ -49,6 +49,7 @@ BaseGame extends Canvas implements Runnable, Tickable, Renderable<Object> {
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
                 System.out.println("FPS: " + frames);
+                System.out.println("Amount of Ticks per Second: " + amountOfTicksPerSec);
                 frames = 0;
             }
         }
