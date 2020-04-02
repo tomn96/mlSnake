@@ -28,6 +28,10 @@ public class WindowGame extends BaseGame {
         this(snake, WindowGame.DEFAULT_AMOUNT_OF_TICKS_PER_SEC);
     }
 
+    public BaseSnake getSnake() {
+        return snake;
+    }
+
     @Override
     public void render(Object object) {
         BufferStrategy bs = this.getBufferStrategy();

@@ -9,7 +9,7 @@ BaseGame extends Canvas implements Runnable, Tickable, Renderable<Object> {
     private Thread thread = null;
     public boolean running = false;
 
-    double amountOfTicksPerSec;
+    private double amountOfTicksPerSec;
 
     public BaseGame(double amountOfTicksPerSec) {
         this.amountOfTicksPerSec = amountOfTicksPerSec;
@@ -19,9 +19,12 @@ BaseGame extends Canvas implements Runnable, Tickable, Renderable<Object> {
         this(BaseGame.DEFAULT_AMOUNT_OF_TICKS_PER_SEC);
     }
 
+    public void setAmountOfTicksPerSec(double amountOfTicksPerSec) {
+        this.amountOfTicksPerSec = amountOfTicksPerSec;
+    }
+
     @Override
     public void run() {
-        double ns = Math.pow(10, 9) / amountOfTicksPerSec;
         double delta = 0;
         int frames = 0;
         long timer = System.currentTimeMillis();
@@ -30,6 +33,7 @@ BaseGame extends Canvas implements Runnable, Tickable, Renderable<Object> {
             render(null);
         }
         while (running) {
+            double ns = Math.pow(10, 9) / amountOfTicksPerSec;
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
             lastTime = now;

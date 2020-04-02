@@ -50,8 +50,14 @@ public class StringBoard extends BaseBoard implements Renderable<Graphics> {
         object.setColor(Color.RED);
         object.fillRect((int)((food.x * tile_size) + x_offset), (int)((food.y * tile_size) + y_offset), tile_size, tile_size);
 
-        object.setColor(Color.GREEN);
-        for (BoardCoordinate coordinate : snake.getCoordinates()) {
+        List<BoardCoordinate> coordinates = snake.getCoordinates();
+        for (int i = 0; i < coordinates.size(); i++) {
+            if (i == 0) {
+                object.setColor(Color.GRAY);
+            } else {
+                object.setColor(Color.GREEN);
+            }
+            BoardCoordinate coordinate = coordinates.get(i);
             object.fillRect((int)((coordinate.x * tile_size) + x_offset), (int)((coordinate.y * tile_size) + y_offset), tile_size, tile_size);
         }
     }
