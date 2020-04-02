@@ -5,8 +5,8 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 
 public class WindowGame extends BaseGame {
-    public static final int WIDTH = 260;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 760;
+    public static final int HEIGHT = 790;
 
     private BaseSnake snake;
     private Window window;
