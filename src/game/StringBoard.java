@@ -48,7 +48,9 @@ public class StringBoard extends BaseBoard implements Renderable<Graphics> {
         object.drawRect(x_offset, y_offset, StringBoard.WIDTH * tile_size, StringBoard.HEIGHT * tile_size);
 
         object.setColor(Color.RED);
-        object.fillRect((int)((food.x * tile_size) + x_offset), (int)((food.y * tile_size) + y_offset), tile_size, tile_size);
+        object.fillRect((int) ((food.x * tile_size) + x_offset), (int) ((food.y * tile_size) + y_offset), tile_size, tile_size);
+        object.setColor(Color.BLACK);
+        object.drawRect((int) ((food.x * tile_size) + x_offset), (int) ((food.y * tile_size) + y_offset), tile_size, tile_size);
 
         List<BoardCoordinate> coordinates = snake.getCoordinates();
         for (int i = 0; i < coordinates.size(); i++) {
@@ -58,7 +60,12 @@ public class StringBoard extends BaseBoard implements Renderable<Graphics> {
                 object.setColor(Color.GREEN);
             }
             BoardCoordinate coordinate = coordinates.get(i);
-            object.fillRect((int)((coordinate.x * tile_size) + x_offset), (int)((coordinate.y * tile_size) + y_offset), tile_size, tile_size);
+            object.fillRect((int) ((coordinate.x * tile_size) + x_offset), (int) ((coordinate.y * tile_size) + y_offset), tile_size, tile_size);
+        }
+
+        for (BoardCoordinate coordinate : coordinates) {
+            object.setColor(Color.BLACK);
+            object.drawRect((int) ((coordinate.x * tile_size) + x_offset), (int) ((coordinate.y * tile_size) + y_offset), tile_size, tile_size);
         }
     }
 }
