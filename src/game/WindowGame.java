@@ -5,8 +5,11 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 
 public class WindowGame extends BaseGame {
-    public static final int WIDTH = 190;
-    public static final int HEIGHT = 220;
+    public static int generation = 0;
+    public static int highscore = 0;
+
+    public static final int WIDTH = 290;
+    public static final int HEIGHT = 350;
 
     private BaseSnake snake;
     private Window window;
@@ -37,6 +40,13 @@ public class WindowGame extends BaseGame {
 
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, WindowGame.WIDTH, WindowGame.HEIGHT);
+
+        g.setColor(Color.BLACK);
+        g.drawRect(85, 10, 120, 60);
+        g.drawString("Generation: " + WindowGame.generation, 95, 30);
+        g.drawString("Highscore: " + WindowGame.highscore, 95, 45);
+
+
         snake.getBoard().render(g);
 
         g.dispose();

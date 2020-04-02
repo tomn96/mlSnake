@@ -35,12 +35,24 @@ public class StringBoard extends BaseBoard implements Renderable<Graphics> {
 
     @Override
     public void render(Graphics object) {
+        int x_offset = 50;
+        int y_offset = 100;
+        int tile_size = 5;
+
+        if (WindowGame.highscore < snake.getScore()) {
+            WindowGame.highscore = snake.getScore();
+        }
+
+        object.setColor(Color.BLACK);
+        object.drawString("Score: " + snake.getScore(), 95, 60);
+        object.drawRect(x_offset, y_offset, StringBoard.WIDTH * tile_size, StringBoard.HEIGHT * tile_size);
+
         object.setColor(Color.RED);
-        object.fillRect((int)food.x * 5, (int)food.y * 5, 5, 5);
+        object.fillRect((int)((food.x * tile_size) + x_offset), (int)((food.y * tile_size) + y_offset), tile_size, tile_size);
 
         object.setColor(Color.GREEN);
         for (BoardCoordinate coordinate : snake.getCoordinates()) {
-            object.fillRect((int)(coordinate.x * 5), (int)(coordinate.y * 5), 5, 5);
+            object.fillRect((int)((coordinate.x * tile_size) + x_offset), (int)((coordinate.y * tile_size) + y_offset), tile_size, tile_size);
         }
     }
 }
