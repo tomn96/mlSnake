@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class HumanSnake extends BaseSnake implements KeyListener {
 
-    public HumanSnake(BaseBoard board) {
+    public HumanSnake(Board board) {
         super(board);
     }
 

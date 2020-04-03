@@ -3,7 +3,7 @@ package game;
 import java.awt.*;
 import java.util.List;
 
-public class StringBoard extends BaseBoard implements Renderable<Graphics> {
+public class StringBoard extends Board implements Renderable<Graphics> {
     public static final int WIDTH = 38;
     public static final int HEIGHT = 38;
 

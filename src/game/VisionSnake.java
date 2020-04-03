@@ -6,7 +6,7 @@ import java.util.List;
 public class VisionSnake extends BaseSnake {
 
 
-    public VisionSnake(BaseBoard board) {
+    public VisionSnake(Board board) {
         super(board);
     }
 

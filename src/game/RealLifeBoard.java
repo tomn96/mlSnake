@@ -3,7 +3,7 @@ package game;
 import java.awt.*;
 import java.util.List;
 
-public class RealLifeBoard extends BaseBoard {  // TODO
+public class RealLifeBoard extends Board {  // TODO
     public static final int WIDTH = 640;
     public static final int HEIGHT = 480;
 

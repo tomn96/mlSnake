@@ -11,7 +11,7 @@ public abstract class BaseSnake implements Alive, Serializable {
 
     protected static final BoardCoordinate[] DIRECTIONS = {new BoardCoordinate(0, -1), new BoardCoordinate(0, 1), new BoardCoordinate(-1, 0), new BoardCoordinate(1, 0)};
 
-    protected BaseBoard board;
+    protected Board board;
 
     protected BoardCoordinate head;
     protected List<BoardCoordinate> body = new ArrayList<>();
@@ -20,7 +20,7 @@ public abstract class BaseSnake implements Alive, Serializable {
     protected boolean dead = false;
     protected int score = 1;
 
-    public BaseSnake(BaseBoard board) {
+    public BaseSnake(Board board) {
         this.board = board;
         this.board.setSnake(this);
         int x = math.Utils.marginRandom(this.board.getWidth());
@@ -38,7 +38,7 @@ public abstract class BaseSnake implements Alive, Serializable {
         return head;
     }
 
-    public BaseBoard getBoard() {
+    public Board getBoard() {
         return board;
     }
 
