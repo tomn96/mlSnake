@@ -85,8 +85,8 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
     @Override
     protected void move() {
         float[] vision = look();
-        BoardCoordinate velocity = think(vision);
-        shiftBody(velocity);
+        velocity = think(vision);
+        shiftBody();
     }
 
     private float[] look() {  // look in all 8 directions and check for food, body and wall

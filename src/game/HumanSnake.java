@@ -5,11 +5,8 @@ import java.awt.event.KeyListener;
 
 public class HumanSnake extends BaseSnake implements KeyListener {
 
-    BoardCoordinate velocity;
-
     public HumanSnake(BaseBoard board) {
         super(board);
-        velocity = new BoardCoordinate(1, 0);
     }
 
     @Override
@@ -19,16 +16,16 @@ public class HumanSnake extends BaseSnake implements KeyListener {
     public void keyPressed(KeyEvent keyEvent) {
         switch (keyEvent.getKeyCode()) {
             case KeyEvent.VK_UP:
-                velocity = new BoardCoordinate(0, -1);
+                velocity = new BoardCoordinate(DIRECTIONS[0]);
                 break;
             case KeyEvent.VK_DOWN:
-                velocity = new BoardCoordinate(0, 1);
+                velocity = new BoardCoordinate(DIRECTIONS[1]);
                 break;
             case KeyEvent.VK_LEFT:
-                velocity = new BoardCoordinate(-1, 0);
+                velocity = new BoardCoordinate(DIRECTIONS[2]);
                 break;
             case KeyEvent.VK_RIGHT:
-                velocity = new BoardCoordinate(1, 0);
+                velocity = new BoardCoordinate(DIRECTIONS[3]);
                 break;
             default:
                 break;
@@ -40,6 +37,6 @@ public class HumanSnake extends BaseSnake implements KeyListener {
 
     @Override
     protected void move() {
-        shiftBody(velocity);
+        shiftBody();
     }
 }

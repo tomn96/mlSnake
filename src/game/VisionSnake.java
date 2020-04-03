@@ -2,28 +2,12 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class VisionSnake extends BaseSnake {
 
-    private List<BoardCoordinate> directions;
-    BoardCoordinate decision;
 
     public VisionSnake(BaseBoard board) {
         super(board);
-        BoardCoordinate up = new BoardCoordinate(0, -1);
-        BoardCoordinate down = new BoardCoordinate(0, 1);
-        BoardCoordinate left = new BoardCoordinate(-1, 0);
-        BoardCoordinate right = new BoardCoordinate(1, 0);
-
-        directions = new ArrayList<>(4);
-        directions.add(up);
-        directions.add(down);
-        directions.add(left);
-        directions.add(right);
-
-        Random random = new Random();
-        decision = new BoardCoordinate(directions.get(random.nextInt(4)));
     }
 
     private int foodDistance(BoardCoordinate direction) {
@@ -67,7 +51,7 @@ public class VisionSnake extends BaseSnake {
     protected List<List<Integer>> narrowLook() {
         List<List<Integer>> results = new ArrayList<>(4);
 
-        for (BoardCoordinate direction : directions) {
+        for (BoardCoordinate direction : DIRECTIONS) {
             List<Integer> temp = new ArrayList<>(3);
             temp.add(foodDistance(direction));
             temp.add(bodyDistance(direction));
@@ -90,7 +74,7 @@ public class VisionSnake extends BaseSnake {
 
             if (food != -1) {  // found food
                 if (body == -1 || food < body) { // body is before of the food
-                    decision = new BoardCoordinate(directions.get(i));
+                    velocity = new BoardCoordinate(DIRECTIONS[i]);
                     return;
                 }
             }
@@ -126,18 +110,23 @@ public class VisionSnake extends BaseSnake {
             }
         }
 
-        int lastIdx = directions.indexOf(decision);
+        int lastIdx = 0;
+        for (int i = 0; i < DIRECTIONS.length; i++) {
+            if (DIRECTIONS[i].equals(velocity)) {
+                lastIdx = i;
+            }
+        }
         if (badDecision[lastIdx] == minVal) {
             return;
         }
 
-        decision = new BoardCoordinate(directions.get(idx));
+        velocity = new BoardCoordinate(DIRECTIONS[idx]);
     }
 
     @Override
     protected void move() {
         List<List<Integer>> vision = narrowLook();
         decide(vision);
-        shiftBody(decision);
+        shiftBody();
     }
 }

@@ -5,15 +5,19 @@ import evolution.Alive;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public abstract class BaseSnake implements Alive, Serializable {
 
+    protected static final BoardCoordinate[] DIRECTIONS = {new BoardCoordinate(0, -1), new BoardCoordinate(0, 1), new BoardCoordinate(-1, 0), new BoardCoordinate(1, 0)};
+
     protected BaseBoard board;
+
     protected BoardCoordinate head;
-
     protected List<BoardCoordinate> body = new ArrayList<>();
-    protected boolean dead = false;
+    protected BoardCoordinate velocity;
 
+    protected boolean dead = false;
     protected int score = 1;
 
     public BaseSnake(BaseBoard board) {
@@ -25,6 +29,9 @@ public abstract class BaseSnake implements Alive, Serializable {
 
         this.eat(false);
         this.eat(false);
+
+        Random random = new Random();
+        this.velocity = new BoardCoordinate(DIRECTIONS[random.nextInt(DIRECTIONS.length)]);
     }
 
     public BoardCoordinate getHead() {
@@ -100,7 +107,7 @@ public abstract class BaseSnake implements Alive, Serializable {
 
     protected abstract void move();
 
-    protected void shiftBody(BoardCoordinate velocity) {  // shift the body to follow the head
+    protected void shiftBody() {  // shift the body to follow the head
         BoardCoordinate temp1 = new BoardCoordinate(head);
         head.add(velocity);
 
