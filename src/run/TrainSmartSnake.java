@@ -17,7 +17,7 @@ public class TrainSmartSnake {
 
         int[][] conditions = {{30, 10}, {100, 50}, {200, 75}, {500, 100}, {1000, 150}, {10000, 300}};
 
-        String path = "train_1";
+        String path = "train_2";
         (new File(path)).mkdir();
 
         LocalDateTime time;
