@@ -16,7 +16,7 @@ public class ModelRunner {
     }
 
     private static void runModel(String path, int generation, boolean slowDown, int onScore) {
-        SmartSnake snake = (SmartSnake) Saver.loadSnake(path);
+        SmartSnake snake = (SmartSnake) ModelManager.loadSnake(path);
         replay = snake.copy();
         WindowGame game = new WindowGame(replay, ticksOfGeneration(generation));
         if (slowDown) {

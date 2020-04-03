@@ -2,7 +2,7 @@ package evolution;
 
 import game.BaseSnake;
 import game.Tickable;
-import run.Saver;
+import run.ModelManager;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -193,7 +193,7 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
             if (path != null) {
                 time = LocalDateTime.now();
                 name = time.toString() + "_" + generation + "_" + highScore;
-                Saver.saveSnake((BaseSnake) getBest(), path + "/" + name);  // TODO - no snake what so ever, only T!
+                ModelManager.saveSnake((BaseSnake) getBest(), path + "/" + name);  // TODO - no snake what so ever, only T!
             }
 
             for (int[] condition : conditions) {
@@ -204,7 +204,7 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
                     if (path != null) {
                         time = LocalDateTime.now();
                         name = time.toString() + "_" + generation + "_" + highScore;
-                        Saver.saveSnake((BaseSnake) getHighScoreSnake(), path + "/" + name);  // TODO - no snake what so ever, only T!
+                        ModelManager.saveSnake((BaseSnake) getHighScoreSnake(), path + "/" + name);  // TODO - no snake what so ever, only T!
                     }
                     break;
                 }

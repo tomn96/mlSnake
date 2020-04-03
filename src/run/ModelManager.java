@@ -4,7 +4,7 @@ import game.BaseSnake;
 
 import java.io.*;
 
-public class Saver {
+public class ModelManager {
 
     public static void saveSnake(BaseSnake snake, String filepath) {
         try {
