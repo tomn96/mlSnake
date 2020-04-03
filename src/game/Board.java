@@ -6,7 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Board implements Renderable<Graphics>, Serializable {
+public class Board implements Renderable<Graphics>, Serializable {
+    public static final int WIDTH = 38;
+    public static final int HEIGHT = 38;
+
+    public static Board copy(Board board) {
+        return new Board(null, board.width, board.height, board.foodList);
+    }
+
     protected int width;
     protected int height;
     protected BaseSnake snake;
@@ -28,7 +35,7 @@ public abstract class Board implements Renderable<Graphics>, Serializable {
         }
     }
 
-    public Board(BaseSnake snake, int width, int height) {
+    protected Board(BaseSnake snake, int width, int height) {
         this(snake, width, height, true);
     }
 
@@ -49,6 +56,14 @@ public abstract class Board implements Renderable<Graphics>, Serializable {
             foodList.add(food);
         }
         foodIndex++;
+    }
+
+    public Board(BaseSnake snake) {
+        this(null, Board.WIDTH, Board.HEIGHT);
+    }
+
+    public Board() {
+        this(null);
     }
 
     public int getWidth() {
@@ -79,7 +94,9 @@ public abstract class Board implements Renderable<Graphics>, Serializable {
         foodIndex++;
     }
 
-    protected abstract boolean collide(BoardCoordinate a, BoardCoordinate b);
+    protected boolean collide(BoardCoordinate a, BoardCoordinate b) {
+        return a.equals(b);
+    }
 
     public boolean foundFood(BoardCoordinate bc) {
         return collide(bc, food);
@@ -92,7 +109,9 @@ public abstract class Board implements Renderable<Graphics>, Serializable {
         return collide(snake.getHead(), food);
     }
 
-    public abstract boolean wallCollision(BoardCoordinate boardCoordinate);
+    public boolean wallCollision(BoardCoordinate boardCoordinate) {
+        return boardCoordinate.x < 0 || boardCoordinate.x >= width || boardCoordinate.y < 0 || boardCoordinate.y >= height;
+    }
 
     public void stringifyCoordinate(StringBuilder graphic, BoardCoordinate coordinate, char sign) {
         if (wallCollision(coordinate)) {
@@ -126,6 +145,42 @@ public abstract class Board implements Renderable<Graphics>, Serializable {
             result.insert((i * width) + i - 1, "\n");
         }
         return result.toString();
+    }
+
+    @Override
+    public void render(Graphics object) {
+        int x_offset = 50;
+        int y_offset = 100;
+        int tile_size = 5;
+
+        if (WindowGame.highscore < snake.getScore()) {
+            WindowGame.highscore = snake.getScore();
+        }
+
+        object.setColor(Color.BLACK);
+        object.drawString("Score: " + snake.getScore(), 95, 60);
+        object.drawRect(x_offset, y_offset, StringBoard.WIDTH * tile_size, StringBoard.HEIGHT * tile_size);
+
+        object.setColor(Color.RED);
+        object.fillRect((int) ((food.x * tile_size) + x_offset), (int) ((food.y * tile_size) + y_offset), tile_size, tile_size);
+        object.setColor(Color.BLACK);
+        object.drawRect((int) ((food.x * tile_size) + x_offset), (int) ((food.y * tile_size) + y_offset), tile_size, tile_size);
+
+        List<BoardCoordinate> coordinates = snake.getCoordinates();
+        for (int i = 0; i < coordinates.size(); i++) {
+            if (i == 0) {
+                object.setColor(Color.GRAY);
+            } else {
+                object.setColor(Color.GREEN);
+            }
+            BoardCoordinate coordinate = coordinates.get(i);
+            object.fillRect((int) ((coordinate.x * tile_size) + x_offset), (int) ((coordinate.y * tile_size) + y_offset), tile_size, tile_size);
+        }
+
+        for (BoardCoordinate coordinate : coordinates) {
+            object.setColor(Color.BLACK);
+            object.drawRect((int) ((coordinate.x * tile_size) + x_offset), (int) ((coordinate.y * tile_size) + y_offset), tile_size, tile_size);
+        }
     }
 
 }
