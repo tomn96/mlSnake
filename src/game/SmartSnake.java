@@ -23,14 +23,6 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
         initialHead = new BoardCoordinate(head);
     }
 
-//    public SmartSnake(Board board) {
-//        this(board, new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
-//    }
-//
-//    public SmartSnake(Brain brain) {
-//        this(new SimpleBoard(), brain);
-//    }
-
     public SmartSnake() {
         this(new Board(), new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
     }

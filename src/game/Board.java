@@ -14,15 +14,15 @@ public class Board implements Renderable<Graphics>, Serializable {
         return new Board(null, board.width, board.height, board.foodList);
     }
 
-    protected int width;
-    protected int height;
-    protected BaseSnake snake;
-    protected BoardCoordinate food;
+    private int width;
+    private int height;
+    private BaseSnake snake;
+    private BoardCoordinate food;
 
-    protected List<BoardCoordinate> foodList;  // list of food positions (used to replay the best snake)
+    private List<BoardCoordinate> foodList;  // list of food positions (used to replay the best snake)
     private int foodIndex = 0;  // iterator to run through the foodlist (used for replay)
 
-    protected Board(BaseSnake snake, int width, int height, boolean initiateFood) {
+    private Board(BaseSnake snake, int width, int height, boolean initiateFood) {
         this.width = width;
         this.height = height;
         this.snake = snake;
@@ -35,11 +35,11 @@ public class Board implements Renderable<Graphics>, Serializable {
         }
     }
 
-    protected Board(BaseSnake snake, int width, int height) {
+    private Board(BaseSnake snake, int width, int height) {
         this(snake, width, height, true);
     }
 
-    protected Board(BaseSnake snake, int width, int height, List<BoardCoordinate> foods) {
+    private Board(BaseSnake snake, int width, int height, List<BoardCoordinate> foods) {
         this(snake, width, height, false);
 
         foodList = new ArrayList<>(foods.size());
@@ -94,7 +94,7 @@ public class Board implements Renderable<Graphics>, Serializable {
         foodIndex++;
     }
 
-    protected boolean collide(BoardCoordinate a, BoardCoordinate b) {
+    private boolean collide(BoardCoordinate a, BoardCoordinate b) {
         return a.equals(b);
     }
 
