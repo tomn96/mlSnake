@@ -85,7 +85,7 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
     @Override
     protected void move() {
         float[] vision = look();
-        velocity = think(vision);
+        think(vision);
         shiftBody();
     }
 
@@ -133,21 +133,12 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
         return result;
     }
 
-    private BoardCoordinate think(float[] vision) {  // think about what direction to move
+    private void think(float[] vision) {  // think about what direction to move
         int decision = brain.output(vision);
-
-        switch (decision) {
-            case 0:
-                return new BoardCoordinate(-1, 0);
-            case 1:
-                return new BoardCoordinate(1, 0);
-            case 2:
-                return new BoardCoordinate(0, -1);
-            case 3:
-                return new BoardCoordinate(0, 1);
-            default:
-                System.err.println("Something went wrong. The snake didn't make any decision where to move to. The decision he made was: " + decision);
-                return new BoardCoordinate(0, 0);
+        if (decision >= 0 && decision < DIRECTIONS.length) {  // don't need to do this - just to be sure...
+            velocity = new BoardCoordinate(DIRECTIONS[decision]);
+        } else {
+            System.err.println("Something went wrong. The snake didn't make any decision where to move to. The decision he made was: " + decision);
         }
     }
 
