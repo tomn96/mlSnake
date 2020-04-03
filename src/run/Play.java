@@ -38,11 +38,11 @@ public class Play {
     }
 
     private static void playSimpleVisionAlgorithm() {
-        play(() -> new VisionSnake(new StringBoard()), 60);
+        play(VisionSnake::new, 60);
     }
 
     private static void playHuman() {
-        play(() -> new HumanSnake(new StringBoard()), 10);
+        play(HumanSnake::new, 10);
     }
 
     public static void main(String[] args) throws InterruptedException {

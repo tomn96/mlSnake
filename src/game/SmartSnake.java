@@ -32,7 +32,7 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
 //    }
 
     public SmartSnake() {
-        this(new StringBoard(), new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
+        this(new Board(), new Brain(SmartSnake.INPUT_NODES, SmartSnake.HIDDEN_NODES, SmartSnake.OUTPUT_NODES, SmartSnake.HIDDEN_LAYERS));
     }
 
     @Override
@@ -49,13 +49,13 @@ public class SmartSnake extends BaseSnake implements Community<SmartSnake> {
 
     @Override
     public SmartSnake copy() {
-        Board b = StringBoard.copy((StringBoard) this.board);
+        Board b = Board.copy((Board) this.board);
         return same(b);
     }
 
     @Override
     public SmartSnake duplicate() {
-        return same(new StringBoard());
+        return same(new Board());
     }
 
     @Override

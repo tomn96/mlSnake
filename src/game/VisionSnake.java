@@ -10,6 +10,10 @@ public class VisionSnake extends BaseSnake {
         super(board);
     }
 
+    public VisionSnake() {
+        this(new Board());
+    }
+
     private int foodDistance(BoardCoordinate direction) {
         BoardCoordinate pos = new BoardCoordinate(head);
         int distance = 0;

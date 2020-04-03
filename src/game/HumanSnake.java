@@ -9,6 +9,10 @@ public class HumanSnake extends BaseSnake implements KeyListener {
         super(board);
     }
 
+    public HumanSnake() {
+        this(new Board());
+    }
+
     @Override
     public void keyTyped(KeyEvent keyEvent) {}
 

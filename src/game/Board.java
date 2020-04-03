@@ -159,7 +159,7 @@ public class Board implements Renderable<Graphics>, Serializable {
 
         object.setColor(Color.BLACK);
         object.drawString("Score: " + snake.getScore(), 95, 60);
-        object.drawRect(x_offset, y_offset, StringBoard.WIDTH * tile_size, StringBoard.HEIGHT * tile_size);
+        object.drawRect(x_offset, y_offset, Board.WIDTH * tile_size, Board.HEIGHT * tile_size);
 
         object.setColor(Color.RED);
         object.fillRect((int) ((food.x * tile_size) + x_offset), (int) ((food.y * tile_size) + y_offset), tile_size, tile_size);
