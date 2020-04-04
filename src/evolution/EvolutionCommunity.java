@@ -4,6 +4,7 @@ import game.BaseSnake;
 import game.Tickable;
 import run.ModelManager;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -193,7 +194,7 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
             if (path != null) {
                 time = LocalDateTime.now();
                 name = time.toString() + "_" + generation + "_" + highScore;
-                ModelManager.saveSnake((BaseSnake) getBest(), path + "/" + name);  // TODO - no snake what so ever, only T!
+                ModelManager.saveSnake((BaseSnake) getBest(), path + File.separator + name);  // TODO - no snake what so ever, only T!
             }
 
             for (int[] condition : conditions) {
@@ -204,7 +205,7 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
                     if (path != null) {
                         time = LocalDateTime.now();
                         name = time.toString() + "_" + generation + "_" + highScore;
-                        ModelManager.saveSnake((BaseSnake) getHighScoreSnake(), path + "/" + name);  // TODO - no snake what so ever, only T!
+                        ModelManager.saveSnake((BaseSnake) getHighScoreSnake(), path + File.separator + name);  // TODO - no snake what so ever, only T!
                     }
                     break;
                 }
@@ -212,10 +213,10 @@ public class EvolutionCommunity<T extends Community<T>> implements Tickable, Ali
         }
     }
 
-//    public void runIfMakeThis(int generation, int score, boolean print) {
-//        int[][] conditions = {{generation, score}};
-//        runIfMakeConditions(conditions, print);
-//    }
+    public void runIfMakeCondition(int generation, int score, boolean print, String path) {
+        int[][] conditions = {{generation, score}};
+        runIfMakeConditions(conditions, print, path);
+    }
 
     protected static String bigListStringify(List<?> l) {
         StringBuilder result = new StringBuilder();
